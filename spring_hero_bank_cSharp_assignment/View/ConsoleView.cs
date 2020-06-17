@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using spring_hero_bank_cSharp_assignment.Controller;
 using spring_hero_bank_cSharp_assignment.Helper;
 
 namespace spring_hero_bank_cSharp_assignment.View
@@ -8,6 +9,8 @@ namespace spring_hero_bank_cSharp_assignment.View
     {
         public bool LoginSuccess { get; set; } //for test
         public bool IsAdmin { get; set; } //for test
+
+        private AccountController _accountController = new AccountController();
 
         public void GenerateMainMenu()
         {
@@ -26,6 +29,7 @@ namespace spring_hero_bank_cSharp_assignment.View
                         Console.WriteLine("Đăng ký tài khoản");
                         Console.WriteLine(
                             "---------------------------------------------------------------------------------");
+                        //goi controller -> de navigate user
                         break;
                     case 2:
                         Console.WriteLine("Đằng nhập hệ thống");
@@ -118,11 +122,49 @@ namespace spring_hero_bank_cSharp_assignment.View
                         Console.WriteLine("Khoá và mở tài khoản người dùng");
                         Console.WriteLine(
                             "---------------------------------------------------------------------------------");
+                        Console.WriteLine("1. Khóa Tài khoản theo số tài khoản");
+                        Console.WriteLine("2. Mở tài khoản theo số tài Khoản");
+                        Console.WriteLine("3. Quay lại menu");
+                        Console.WriteLine("Nhập lựa chọn (1, 2)");
+                        var actionChoice = PromptHelper.GetUserChoice(1, 3);
+                        switch (actionChoice)
+                        {
+                            case 1:
+                                Console.WriteLine("khóa tài khoản");
+                                _accountController.LockAccount();
+                                PromptHelper.StopConsole();
+                                break;
+                            case 2:
+                                Console.WriteLine("Mở khóa tài khoản");
+                                _accountController.UnLockAccount();
+                                PromptHelper.StopConsole();
+                                break;
+                            case 3:
+                                Console.WriteLine("quay lại menu chính");
+                                break;
+                        }
+
                         break;
                     case 8:
                         Console.WriteLine("Tìm kiếm lịch sử giao dịch theo số tài khoản");
                         Console.WriteLine(
                             "---------------------------------------------------------------------------------");
+                        var listTransactions = _accountController.GetTransactionsByAccountNumber();
+                        List<string> listPage = new List<string>();
+
+                        if (listTransactions.Count == 0 )
+                        {
+                            Console.WriteLine("Không có giao dịch nào được thực hiện");
+                            break;
+                        } 
+                        foreach (var transaction in listTransactions)
+                        {
+                            listPage.Add(transaction.ToString());
+                        }
+
+                        Console.WriteLine($"Đã tìm thấy {listTransactions.Count} lịch sử giao dịch");
+                        GeneratePageView(listPage);
+                        PromptHelper.StopConsole();
                         break;
                     case 9:
                         Console.WriteLine("Thay đổi thông tin tài khoản");
@@ -227,8 +269,10 @@ namespace spring_hero_bank_cSharp_assignment.View
             int total = data.Count;
             while (true)
             {
-                Console.WriteLine($"đang hiển thị trang {currentPageIndex + 1} trên tổng số {total} trang");
+                Console.Clear();
+                Console.WriteLine($"---------------------------- đang hiển thị trang {currentPageIndex + 1} trên tổng số {total} trang ----------------------------");
                 Console.WriteLine(data[currentPageIndex]);
+                Console.WriteLine("--------------------------------------------------------------------------------------------------------------------------------");
                 Console.WriteLine("ấn > để next, ấn < để back, ấn esc để exit");
                 ConsoleKeyInfo keyInfo = Console.ReadKey(true);
                 int charKey = keyInfo.GetHashCode(); //get ascii code of keyboard character entered
@@ -247,7 +291,7 @@ namespace spring_hero_bank_cSharp_assignment.View
                     currentPageIndex--;
                     if (currentPageIndex < 0)
                     {
-                        currentPageIndex = total -1;
+                        currentPageIndex = total - 1;
                         continue;
                     }
                 }

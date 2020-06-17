@@ -102,10 +102,12 @@
     </ItemGroup>
     <ItemGroup>
         <Compile Include="Controller\AccountController.cs" />
+        <Compile Include="Controller\ConnectionHelper.cs" />
         <Compile Include="Entity\Account.cs" />
         <Compile Include="Entity\SHBTransaction.cs" />
         <Compile Include="Helper\PromptHelper.cs" />
         <Compile Include="Model\AccountModel.cs" />
+        <Compile Include="Model\ShbTransactionModel.cs" />
         <Compile Include="Program.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
         <Compile Include="View\ConsoleView.cs" />

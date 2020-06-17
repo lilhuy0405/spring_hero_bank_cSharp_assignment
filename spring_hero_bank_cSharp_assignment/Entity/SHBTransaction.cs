@@ -15,6 +15,17 @@ namespace spring_hero_bank_cSharp_assignment.Entity
         public DateTime UpdateAt { get; set; }
         public TransactionStatus Status { get; set; }
         public TransactionType Type { get; set; }
+        public override string ToString()
+        {
+            return $"Mã giao dịch: {this.Code}\n" +
+                   $"số tài khoản người gửi {this.SenderAccountNumber}\n" +
+                   $"số tài khoản người nhận {this.ReceiverAccountNumber}\n" +
+                   $"phí giao dịch {this.Fee}\n" +
+                   $"Số tiền giao dịch {this.Amount} ngày tạo {this.CreateAt}\n" +
+                   $"ngày cập nhật {this.UpdateAt}\n" +
+                   $"loại giao dịch {this.Type}\n" +
+                   $"trạng thái giao dịch {this.Status.ToString()}";
+        }
     }
     
     public enum TransactionType
@@ -30,4 +41,5 @@ namespace spring_hero_bank_cSharp_assignment.Entity
         DONE = 2,
         FAILED = 0
     }
+ 
 }
