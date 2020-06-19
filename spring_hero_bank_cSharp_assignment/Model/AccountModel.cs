@@ -35,5 +35,65 @@ namespace spring_hero_bank_cSharp_assignment.Model
                 return false;
             }
         }
+        
+        public bool CheckExistAccountByUsername(string username)
+        {
+            var cnn = ConnectionHelper.GetConnection();
+            bool result = false ;
+            cnn.Open();
+
+
+            try
+            {
+                var stringCmd = $"SELECT userName FROM accounts WHERE userName = '{username}'";
+                //Console.WriteLine(cmdQuery);
+                var cmd = new MySqlCommand(
+                    stringCmd, cnn);
+                var reader = cmd.ExecuteReader();
+                
+                if (reader.Read())
+                {
+                    result = true;
+                }
+                reader.Close();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            finally
+            {
+                
+                cnn.Close();
+            }
+            
+            return result;
+        }
+        
+
+        public void SaveAccount(Account newAccount)
+        {
+            var cnn = ConnectionHelper.GetConnection();
+            cnn.Open();
+
+            try
+            {
+                var cmd = new MySqlCommand(
+                    $"insert into accounts values('{newAccount.AccountNumber}','{newAccount.PhoneNumber}','{newAccount.FullName}','{newAccount.Email}','{newAccount.Username}','{newAccount.PasswordHash}','{newAccount.Salt}','{newAccount.Balance}','{newAccount.Status}','{newAccount.Role}')",
+                    cnn);
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Loi ket noi dâtbase");
+                throw;
+            }
+            finally
+            {
+                cnn.Close();
+            }
+            Console.WriteLine("Created new account success");
+        }
     }
 }

@@ -29,7 +29,6 @@ namespace spring_hero_bank_cSharp_assignment.View
                         Console.WriteLine("Đăng ký tài khoản");
                         Console.WriteLine(
                             "---------------------------------------------------------------------------------");
-                        _accountController.Register();
                         //goi controller -> de navigate user
                         break;
                     case 2:
