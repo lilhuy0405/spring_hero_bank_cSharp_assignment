@@ -35,5 +35,30 @@ namespace spring_hero_bank_cSharp_assignment.Model
                 return false;
             }
         }
+
+        public bool UpdateAccountByAccountNumber(string accountNumber, string field, string newData)
+        {
+            var connection = ConnectionHelper.GetConnection();
+            try
+            {
+                connection.Open();
+                var stringUpdateCmd = $"UPDATE `accounts` SET `{field}` = '{newData}' WHERE `accounts`.`accountNumber` = '{accountNumber}'; ";
+                MySqlCommand updateCmd = new MySqlCommand(stringUpdateCmd, connection);
+                int record = updateCmd.ExecuteNonQuery();
+                if (record == 0)
+                {
+                    throw new Exception("Lỗi khi thao tác với Database");
+                }
+                connection.Close();
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("update thông tin vào database thất bại lỗi: " + e.Message);
+                connection.Close();
+                return false;
+            }
+            return false;
+        }
     }
 }
