@@ -8,6 +8,7 @@ namespace spring_hero_bank_cSharp_assignment.Controller
 {
     public class AccountController
     {
+        public static double MIN_BALANCE = 0;
         private PasswordHelper _passwordHelper = new PasswordHelper();
         private AccountModel _accountModel = new AccountModel();
         private AccountHelper _accountHelper = new AccountHelper();
@@ -175,7 +176,7 @@ namespace spring_hero_bank_cSharp_assignment.Controller
 
             //Console.WriteLine(newAccount.ToString());
             _accountModel.SaveAccount(newAccount);
-        }
+        }    
 
         public bool UpdatePhoneNumber(string accountNumber)
         {

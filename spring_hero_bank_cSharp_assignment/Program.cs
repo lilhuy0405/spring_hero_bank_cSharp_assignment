@@ -19,7 +19,6 @@ namespace spring_hero_bank_cSharp_assignment
             // view.LoginSuccess = true;
             // view.IsAdmin = true;
             // view.GenerateMainMenu();
-            
         }
     }
 }
