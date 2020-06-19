@@ -21,7 +21,8 @@ namespace spring_hero_bank_cSharp_assignment.Entity
                    $"số tài khoản người gửi {this.SenderAccountNumber}\n" +
                    $"số tài khoản người nhận {this.ReceiverAccountNumber}\n" +
                    $"phí giao dịch {this.Fee}\n" +
-                   $"Số tiền giao dịch {this.Amount} ngày tạo {this.CreateAt}\n" +
+                   $"Số tiền giao dịch {this.Amount}\n" +
+                   $"ngày tạo {this.CreateAt}\n" +
                    $"ngày cập nhật {this.UpdateAt}\n" +
                    $"loại giao dịch {this.Type}\n" +
                    $"trạng thái giao dịch {this.Status.ToString()}";

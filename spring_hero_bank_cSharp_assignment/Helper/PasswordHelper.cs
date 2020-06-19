@@ -1,4 +1,7 @@
-﻿using System;
+using System;
+using System.Security.Cryptography;
+using System.Text;
+using System;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -7,7 +10,7 @@ namespace spring_hero_bank_cSharp_assignment.Helper
     public class PasswordHelper
     {
         /*MD5 hash generate salt compare password*/
-        
+
         public string MD5Hash(string input)
         {
             var hash = new StringBuilder();
