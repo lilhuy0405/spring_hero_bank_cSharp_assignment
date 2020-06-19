@@ -103,6 +103,7 @@
     <ItemGroup>
         <Compile Include="Controller\AccountController.cs" />
         <Compile Include="Controller\ConnectionHelper.cs" />
+        <Compile Include="Controller\ShbTransactionController.cs" />
         <Compile Include="Entity\Account.cs" />
         <Compile Include="Entity\SHBTransaction.cs" />
         <Compile Include="Helper\AccountHelper.cs" />

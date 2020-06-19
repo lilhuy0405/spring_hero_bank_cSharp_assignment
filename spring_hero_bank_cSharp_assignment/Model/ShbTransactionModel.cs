@@ -8,6 +8,7 @@ namespace spring_hero_bank_cSharp_assignment.Model
 {
     public class ShbTransactionModel
     {
+        
         public List<SHBTransaction> GetTransactionsByAccountNumber(string accountNumber)
         {
             List<SHBTransaction> listTransactions = new List<SHBTransaction>();
@@ -48,5 +49,48 @@ namespace spring_hero_bank_cSharp_assignment.Model
 
             return listTransactions;
         }
+        
+        public void UpdateShbTransaction(SHBTransaction shbTransaction)
+        {
+            var cnn= ConnectionHelper.GetConnection();
+            cnn.Open();
+            try
+            {
+                var stringCmd = $"UPDATE shb-transaction WHERE code = {shbTransaction.Code} ";
+                var cmd = new MySqlCommand(stringCmd, cnn);
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            finally
+            {
+                cnn.Close();
+            }
+        }
+
+        
+        public void InsertNewShbTransaction(SHBTransaction shbTransaction)
+        {
+            var cnn= ConnectionHelper.GetConnection();
+            cnn.Open();
+            try
+            {
+                var stringCmd = $"INSERT shb-transaction VAlUES ({shbTransaction.Code},{shbTransaction.SenderAccountNumber},{shbTransaction.ReceiverAccountNumber},{shbTransaction.Message},{shbTransaction.Amount},{shbTransaction.Fee},{shbTransaction.CreateAt},{shbTransaction.UpdateAt},{shbTransaction.Status},{shbTransaction.Type}) ";
+                var cmd = new MySqlCommand(stringCmd,cnn);
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+          
+            }
+            finally
+            {
+                cnn.Close();
+            }
+        }
     }
+    
 }

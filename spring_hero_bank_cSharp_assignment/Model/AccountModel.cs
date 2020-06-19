@@ -121,5 +121,106 @@ namespace spring_hero_bank_cSharp_assignment.Model
             }
             return false;
         }
+        
+        public double GetCurrentBlanceByAccountNumber(string accountNumber)
+        {
+            double currentBalane  ;
+            var cnn = ConnectionHelper.GetConnection();
+            cnn.Open();
+            try
+            {
+                var stringCmdGetAccount =
+                    $"select balance from `accounts` where accountNumber = {accountNumber} and status = 1";
+                var cmdGetAccount = new MySqlCommand(stringCmdGetAccount, cnn);
+                var accountReader = cmdGetAccount.ExecuteReader();
+                if (!accountReader.Read())
+                {
+                    throw new Exception("tai khoan da bi vi hieu hoa ");
+                }
+
+                currentBalane = accountReader.GetDouble("balance");
+               
+                accountReader.Close();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            finally
+            {
+                cnn.Close();
+            }
+
+            return  currentBalane;
+        }
+
+        public bool UpdateIncreaseBalanceByAccountNumber(string accountNumber, double newBalance)
+        {
+            var cnn = ConnectionHelper.GetConnection();
+            cnn.Open();
+            var result = false;
+            try
+            {
+                var stringCmdUpdateAccount =
+                    $"update `accounts` set blance = {newBalance} where accountNumber = {accountNumber} and status = 1";
+                var cmdUpdateAccount = new MySqlCommand(stringCmdUpdateAccount, cnn);
+                var successOrNot = cmdUpdateAccount.ExecuteNonQuery();
+                if (successOrNot == 0)
+                {
+                    throw new Exception("Tài khoản của quý khách dã bị vô hiệu hóa");
+                }
+
+                Console.WriteLine("Giao dịch thành công");
+                Console.WriteLine($"Số dư mới là : {GetCurrentBlanceByAccountNumber(accountNumber)}");
+                result = true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Giao dịch không thành công");
+            }
+            finally
+            {
+                cnn.Close();
+            }
+
+            return result;
+
+        }
+
+        public bool UpdateDecreaseBalanceByAccountNumber(string accountNumber, double deincreaseAmountAfterFee)
+        {
+            var cnn = ConnectionHelper.GetConnection();
+            cnn.Open();
+            var currentBlance = GetCurrentBlanceByAccountNumber(accountNumber);
+            var result = false;
+            try
+            {
+                var stringCmdUpdateAccount =
+                    $"update `accounts` set blance = {currentBlance} where accountNumber = {accountNumber} and status = 1";
+                var cmdUpdateAccount = new MySqlCommand(stringCmdUpdateAccount, cnn);
+                var successOrNot = cmdUpdateAccount.ExecuteNonQuery();
+                if (successOrNot == 0)
+                {
+                    throw new Exception("tai khan da bij vo hieu hoa");
+                }
+
+                Console.WriteLine("giao dich thanh cong");
+                result = true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("giao dich ko thanh cong");
+                throw;
+            }
+            finally
+            {
+                cnn.Close();
+            }
+
+            return result;
+
+        }
     }
+    
 }
