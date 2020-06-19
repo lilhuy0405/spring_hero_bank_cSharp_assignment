@@ -19,17 +19,7 @@ namespace spring_hero_bank_cSharp_assignment
          //   view.LoginSuccess = true;
          //   view.IsAdmin = true;
          //   view.GenerateMainMenu();
-
-         string data01 = "page1";
-         string data02 = "page2";
-         string data03 = "page3";
-         string data04 = "page4";
-         List<string> data = new List<string>();
-         data.Add(data01);
-         data.Add(data02);
-         data.Add(data03);
-         data.Add(data04);
-         new ConsoleView().GeneratePageView(data);
+         
         }
     }
 }

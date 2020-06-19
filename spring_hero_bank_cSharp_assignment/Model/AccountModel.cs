@@ -174,7 +174,7 @@ namespace spring_hero_bank_cSharp_assignment.Model
 
         }
         
-        public double GetCurrentBlanceByAccountNumber(string accountNumber)
+        public double GetCurrentBlanceByAccountNumber(string accountNumber) //TODO: fix typo
         {
             double currentBalane  ;
             var cnn = ConnectionHelper.GetConnection();
@@ -240,16 +240,17 @@ namespace spring_hero_bank_cSharp_assignment.Model
 
         }
 
-        public bool UpdateDecreaseBalanceByAccountNumber(string accountNumber, double deincreaseAmountAfterFee)
+        public bool UpdateDecreaseBalanceByAccountNumber(string accountNumber, double decreaseAmountAfterFee)//typo
         {
             var cnn = ConnectionHelper.GetConnection();
             cnn.Open();
             var currentBlance = GetCurrentBlanceByAccountNumber(accountNumber);
-            var result = false;
+            var newBalance = currentBlance - decreaseAmountAfterFee;
+            bool result = false;
             try
             {
                 var stringCmdUpdateAccount =
-                    $"update `accounts` set blance = {currentBlance} where accountNumber = {accountNumber} and status = 1";
+                    $"update `accounts` set blance = {newBalance} where accountNumber = {accountNumber} and status = 1";
                 var cmdUpdateAccount = new MySqlCommand(stringCmdUpdateAccount, cnn);
                 var successOrNot = cmdUpdateAccount.ExecuteNonQuery();
                 if (successOrNot == 0)
@@ -262,8 +263,8 @@ namespace spring_hero_bank_cSharp_assignment.Model
             }
             catch (Exception e)
             {
+                result = false;
                 Console.WriteLine("giao dich ko thanh cong");
-                throw;
             }
             finally
             {
