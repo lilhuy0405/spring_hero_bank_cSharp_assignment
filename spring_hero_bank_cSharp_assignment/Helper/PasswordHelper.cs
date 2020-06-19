@@ -1,14 +1,7 @@
-<<<<<<< HEAD
-﻿﻿using System;
+using System;
 using System.Security.Cryptography;
 using System.Text;
-
-namespace HelloT1908E.Helper
-{
-    public class PasswordHelper
-    {
-=======
-﻿using System;
+using System;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -17,8 +10,7 @@ namespace spring_hero_bank_cSharp_assignment.Helper
     public class PasswordHelper
     {
         /*MD5 hash generate salt compare password*/
-        
->>>>>>> 93039d25edd4f80e383b208b7647f4081e85490d
+
         public string MD5Hash(string input)
         {
             var hash = new StringBuilder();

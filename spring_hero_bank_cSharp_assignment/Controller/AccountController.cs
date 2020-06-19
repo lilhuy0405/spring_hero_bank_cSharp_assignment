@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using HelloT1908E.Helper;
 using spring_hero_bank_cSharp_assignment.Entity;
 using spring_hero_bank_cSharp_assignment.Helper;
 using spring_hero_bank_cSharp_assignment.Model;
@@ -13,8 +12,8 @@ namespace spring_hero_bank_cSharp_assignment.Controller
         private AccountModel _accountModel = new AccountModel();
         private AccountHelper _accountHelper = new AccountHelper();
         private ShbTransactionModel _transactionModel = new ShbTransactionModel();
-<<<<<<< HEAD
-        private PasswordHelper _passwordHelper = new PasswordHelper();
+
+   
         
         public Account Login() // Đăng nhập hệ thống 
         {
@@ -34,7 +33,8 @@ namespace spring_hero_bank_cSharp_assignment.Controller
             return null;
         }
 
-        // 1. Danh sách người dùng
+        // 1. Danh sách người dùng // hàm này cần return về 1 list chứ k p là in ra list
+        //TODO: refactor this -> public list<Account> GetListAccount()
         public void ListAccount()
         {
             Console.WriteLine("Danh sách người dùng: ");
@@ -45,6 +45,7 @@ namespace spring_hero_bank_cSharp_assignment.Controller
         }
 
         // 2. Danh sách lịch sử giao dịch
+        //TODO: refactor -> public list<SHbTransaction> getListTranSaction
         public void ListTransaction()
         {
             Console.WriteLine("Danh sách lịch sử giao dịch: ");
@@ -80,9 +81,9 @@ namespace spring_hero_bank_cSharp_assignment.Controller
 
         // 7. Khoá và mở tài khoản người dùng
         // 7.1. Khóa tài khoản người dùng
-=======
 
->>>>>>> 93039d25edd4f80e383b208b7647f4081e85490d
+
+
         public bool LockAccount()
         {
             Console.WriteLine("Nhập vào số tài khoản bạn muốn khóa");
@@ -119,8 +120,7 @@ namespace spring_hero_bank_cSharp_assignment.Controller
             Console.WriteLine("Nhập số tài khoản muốn tra cứu lịch sử giao dịch");
             var accountNumber = Console.ReadLine();
             return _transactionModel.GetTransactionsByAccountNumber(accountNumber);
-<<<<<<< HEAD
-=======
+
         }
 
 
@@ -251,7 +251,6 @@ namespace spring_hero_bank_cSharp_assignment.Controller
             Console.WriteLine("Nhập mật khẩu cũ của bạn: ");
             string oldPassWord = Console.ReadLine();
             return false;
->>>>>>> 93039d25edd4f80e383b208b7647f4081e85490d
         }
     }
 }

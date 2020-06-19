@@ -18,7 +18,7 @@ namespace spring_hero_bank_cSharp_assignment.Model
             cnn.Close();
             return listAccount;
         }
-        
+        //TODO: put code in try catch
         public List<SHBTransaction> GetListTransaction() // Lấy danh sách giao dịch 
         {
             var listTransaction = new List<SHBTransaction>();
@@ -57,7 +57,6 @@ namespace spring_hero_bank_cSharp_assignment.Model
             }
         }
 
-<<<<<<< HEAD
         public Account GetActiveAccountByUsername(string username)
         {
             Account account = null;
@@ -86,7 +85,8 @@ namespace spring_hero_bank_cSharp_assignment.Model
 
             cnn.Close();
             return account;
-=======
+        }
+
         public bool CheckExistAccountByUsername(string username)
         {
             var cnn = ConnectionHelper.GetConnection();
@@ -171,7 +171,7 @@ namespace spring_hero_bank_cSharp_assignment.Model
                 return false;
             }
             return false;
->>>>>>> 93039d25edd4f80e383b208b7647f4081e85490d
+
         }
     }
 }
