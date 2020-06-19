@@ -57,6 +57,7 @@ namespace spring_hero_bank_cSharp_assignment.Model
             }
         }
 
+<<<<<<< HEAD
         public Account GetActiveAccountByUsername(string username)
         {
             Account account = null;
@@ -85,6 +86,92 @@ namespace spring_hero_bank_cSharp_assignment.Model
 
             cnn.Close();
             return account;
+=======
+        public bool CheckExistAccountByUsername(string username)
+        {
+            var cnn = ConnectionHelper.GetConnection();
+            bool result = false ;
+            cnn.Open();
+
+
+            try
+            {
+                var stringCmd = $"SELECT userName FROM accounts WHERE userName = '{username}'";
+                //Console.WriteLine(cmdQuery);
+                var cmd = new MySqlCommand(
+                    stringCmd, cnn);
+                var reader = cmd.ExecuteReader();
+                
+                if (reader.Read())
+                {
+                    result = true;
+                }
+                reader.Close();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            finally
+            {
+                
+                cnn.Close();
+            }
+            
+            return result;
+        }
+
+
+        public void SaveAccount(Account newAccount)
+        {
+            var cnn = ConnectionHelper.GetConnection();
+            cnn.Open();
+
+            try
+            {
+                var cmd = new MySqlCommand(
+                    $"insert into accounts values('{newAccount.AccountNumber}','{newAccount.PhoneNumber}','{newAccount.FullName}','{newAccount.Email}','{newAccount.Username}','{newAccount.PasswordHash}','{newAccount.Salt}','{newAccount.Balance}','{newAccount.Status}','{newAccount.Role}')",
+                    cnn);
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Loi ket noi dâtbase");
+                throw;
+            }
+            finally
+            {
+                cnn.Close();
+            }
+
+            Console.WriteLine("Created new account success");
+        }
+
+        public bool UpdateAccountByAccountNumber(string accountNumber, string field, string newData)
+        {
+            var connection = ConnectionHelper.GetConnection();
+            try
+            {
+                connection.Open();
+                var stringUpdateCmd = $"UPDATE `accounts` SET `{field}` = '{newData}' WHERE `accounts`.`accountNumber` = '{accountNumber}'; ";
+                MySqlCommand updateCmd = new MySqlCommand(stringUpdateCmd, connection);
+                int record = updateCmd.ExecuteNonQuery();
+                if (record == 0)
+                {
+                    throw new Exception("Lỗi khi thao tác với Database");
+                }
+                connection.Close();
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("update thông tin vào database thất bại lỗi: " + e.Message);
+                connection.Close();
+                return false;
+            }
+            return false;
+>>>>>>> 93039d25edd4f80e383b208b7647f4081e85490d
         }
     }
 }

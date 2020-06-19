@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using spring_hero_bank_cSharp_assignment.Controller;
-using spring_hero_bank_cSharp_assignment.Entity;
 using spring_hero_bank_cSharp_assignment.Helper;
 
 namespace spring_hero_bank_cSharp_assignment.View
 {
     public class ConsoleView
     {
-        private static Account _currentLogin;
         public bool LoginSuccess { get; set; } //for test
         public bool IsAdmin { get; set; } //for test
 
@@ -31,22 +29,17 @@ namespace spring_hero_bank_cSharp_assignment.View
                         Console.WriteLine("Đăng ký tài khoản");
                         Console.WriteLine(
                             "---------------------------------------------------------------------------------");
-                        _accountController.Register();
                         //goi controller -> de navigate user
                         break;
                     case 2:
-                        Console.WriteLine("Đăng nhập hệ thống");
+                        Console.WriteLine("Đằng nhập hệ thống");
                         Console.WriteLine(
                             "---------------------------------------------------------------------------------");
-                        var account = _accountController.Login();
-                        if (account == null)
+                        if (!LoginSuccess)
                         {
-                            Console.WriteLine("Login failed!");
-                            return;
+                            Console.WriteLine("login failed");
                         }
-                        _currentLogin = account;
-                        Console.WriteLine($"Login success! Welcome back {_currentLogin.FullName}");
-                        if (_currentLogin.Role == AccountRole.ADMIN)
+                        else if (LoginSuccess && IsAdmin)
                         {
                             GenerateAdminMenu();
                         }
@@ -79,7 +72,7 @@ namespace spring_hero_bank_cSharp_assignment.View
                 Console.WriteLine("-------------------------- Ngân Hàng Spring Hero Bank --------------------------");
                 Console.WriteLine("Chào mừng admin xuân hùng quay trỏ lại. Vui lòng chọn thao tác");
                 Console.WriteLine("1. Danh sách người dùng");
-                Console.WriteLine("2. Danh sách lịch sử giao dịch.");
+                Console.WriteLine("2.Danh sách lịch sử giao dịch.");
                 Console.WriteLine("3. Tìm kiếm người dùng theo tên.");
                 Console.WriteLine("4. Tìm kiếm người dùng theo số tài khoản");
                 Console.WriteLine("5. Tìm kiếm người dùng theo số điện thoại");
@@ -98,13 +91,12 @@ namespace spring_hero_bank_cSharp_assignment.View
                         Console.WriteLine("danh sách người dùng");
                         Console.WriteLine(
                             "---------------------------------------------------------------------------------");
-                        _accountController.ListAccount();
+
                         break;
                     case 2:
                         Console.WriteLine("Danh sách lịch sử giao dịch");
                         Console.WriteLine(
                             "---------------------------------------------------------------------------------");
-                        _accountController.ListTransaction();
                         break;
                     case 3:
                         Console.WriteLine("Tìm kiếm người dùng theo tên");
@@ -178,34 +170,6 @@ namespace spring_hero_bank_cSharp_assignment.View
                         Console.WriteLine("Thay đổi thông tin tài khoản");
                         Console.WriteLine(
                             "---------------------------------------------------------------------------------");
-                        while (true)
-                        {
-                            Console.WriteLine("Lựa chọn thông tin muốn thay đổi: ");
-                            Console.WriteLine("1. Thay đổi tên đầy đủ");
-                            Console.WriteLine("2. Thay đổi email");
-                            Console.WriteLine("3. Thay đổi số điện thoại");
-                            Console.WriteLine("4. Quay lại menu");
-                            var updateChoice = PromptHelper.GetUserChoice(1, 4);
-                            switch (updateChoice)
-                            {
-                                case 1:
-                                    _accountController.UpdateFullName("123456789");
-                                    break;
-                                case 2:
-                                    _accountController.UpdateEmail("123456789");
-                                    break;
-                                case 3:
-                                    _accountController.UpdatePhoneNumber("123456789"); // instance account number just for test
-                                    break;
-                                case 4:
-                                    break;
-                            }
-
-                            if (updateChoice == 4)
-                            {
-                                break;
-                            }
-                        }
                         break;
                     case 10:
                         Console.WriteLine(" Thay đổi thông tin mật khẩu");
@@ -217,8 +181,8 @@ namespace spring_hero_bank_cSharp_assignment.View
                         Console.WriteLine(
                             "---------------------------------------------------------------------------------");
                         break;
-                    // default:
-                    //     break;
+                    default:
+                        break;
                 }
 
                 if (choice == 11)

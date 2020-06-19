@@ -102,16 +102,10 @@
     </ItemGroup>
     <ItemGroup>
         <Compile Include="Controller\AccountController.cs" />
+        <Compile Include="Controller\ConnectionHelper.cs" />
         <Compile Include="Entity\Account.cs" />
         <Compile Include="Entity\SHBTransaction.cs" />
-<<<<<<< HEAD
-        <Compile Include="Helper\ConnectionHelper.cs" />
-=======
-        <Compile Include="Helper\AccountHelper.cs" />
->>>>>>> 93039d25edd4f80e383b208b7647f4081e85490d
-        <Compile Include="Helper\PasswordHelper.cs" />
         <Compile Include="Helper\PromptHelper.cs" />
-        <Compile Include="Helper\ValidateHelper.cs" />
         <Compile Include="Model\AccountModel.cs" />
         <Compile Include="Model\ShbTransactionModel.cs" />
         <Compile Include="Program.cs" />
