@@ -12,13 +12,28 @@
         public AccountRole Role { get; set; }
         public AccountStatus Status { get; set; }
         public double Balance { get; set; }
+        
+        public override string ToString()
+        {
+            return
+                $"Họ và tên: {FullName}\n" +
+                $"Số tài khoản: {AccountNumber}\n" +
+                $"Số điện thoại: {PhoneNumber}\n" +
+                $"Email: {Email}\n" +
+                $"Salt: {Salt}\n" +
+                $"PasswordHash: {PasswordHash}\n" +
+                $"Username: {Username}\n" +
+                $"Quyền truy cập: {Role}\n" +
+                $"Tình trạng: {Status}\n" +
+                $"Số dư: {Balance}\n";
+        }
     }
     
     public enum AccountStatus
     {
         ACTIVE = 1,
         DEACTIVE = -1,
-        LOCK = 0
+        LOCKED = 0
     }
 
     public enum AccountRole

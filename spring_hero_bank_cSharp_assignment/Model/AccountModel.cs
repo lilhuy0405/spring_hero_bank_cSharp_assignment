@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Google.Protobuf.WellKnownTypes;
 using MySql.Data.MySqlClient;
 using spring_hero_bank_cSharp_assignment.Controller;
@@ -8,6 +9,26 @@ namespace spring_hero_bank_cSharp_assignment.Model
 {
     public class AccountModel
     {
+        public List<Account> GetListAccount() // Lấy danh sách người dùng 
+        {
+            var listAccount = new List<Account>();
+            var cnn = ConnectionHelper.GetConnection();
+            cnn.Open();
+            var cmd = new MySqlCommand("select * from accounts", cnn);
+            cnn.Close();
+            return listAccount;
+        }
+        //TODO: put code in try catch
+        public List<SHBTransaction> GetListTransaction() // Lấy danh sách giao dịch 
+        {
+            var listTransaction = new List<SHBTransaction>();
+            var cnn = ConnectionHelper.GetConnection();
+            cnn.Open();
+            var cmd = new MySqlCommand("select * from shb-transactions", cnn);
+            cnn.Close();
+            return listTransaction;
+        }
+        
         public bool UpdateAccountStatusByAccountNumber(string accountNumber, AccountStatus status)
         {
             var connection = ConnectionHelper.GetConnection();
@@ -34,6 +55,36 @@ namespace spring_hero_bank_cSharp_assignment.Model
                 connection.Close();
                 return false;
             }
+        }
+
+        public Account GetActiveAccountByUsername(string username)
+        {
+            Account account = null;
+            var cnn = ConnectionHelper.GetConnection();
+            cnn.Open();
+            var cmd = new MySqlCommand(
+                $"select * from accounts where username = '{username}' and status = '{(int) AccountStatus.ACTIVE}'",
+                cnn);
+            var reader = cmd.ExecuteReader();
+            if (reader.Read())
+            {
+                account = new Account()
+                {
+                    FullName = reader.GetString("fullname"),
+                    AccountNumber = reader.GetString("accountNumber"),
+                    PhoneNumber = reader.GetString("phoneNumber"),
+                    Email = reader.GetString("email"),
+                    Salt = reader.GetString("salt"),
+                    PasswordHash = reader.GetString("passwordHash"),
+                    Username = reader.GetString("username"),
+                    Role = (AccountRole) reader.GetInt32("role"),
+                    Status = (AccountStatus) reader.GetInt32("status"),
+                    Balance = reader.GetDouble("balance")
+                };
+            }
+
+            cnn.Close();
+            return account;
         }
 
         public bool CheckExistAccountByUsername(string username)
@@ -120,6 +171,7 @@ namespace spring_hero_bank_cSharp_assignment.Model
                 return false;
             }
             return false;
+
         }
         
         public double GetCurrentBlanceByAccountNumber(string accountNumber)
