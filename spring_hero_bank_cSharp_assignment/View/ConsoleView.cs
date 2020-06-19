@@ -10,6 +10,7 @@ namespace spring_hero_bank_cSharp_assignment.View
         public bool LoginSuccess { get; set; } //for test
         public bool IsAdmin { get; set; } //for test
 
+
         private AccountController _accountController = new AccountController();
 
         public void GenerateMainMenu()
@@ -48,8 +49,7 @@ namespace spring_hero_bank_cSharp_assignment.View
                         {
                             GenerateCustomMenu();
                         }
-
-
+                        
                         break;
                     case 3:
                         Console.WriteLine("Thoát");
@@ -153,11 +153,12 @@ namespace spring_hero_bank_cSharp_assignment.View
                         var listTransactions = _accountController.GetTransactionsByAccountNumber();
                         List<string> listPage = new List<string>();
 
-                        if (listTransactions.Count == 0 )
+                        if (listTransactions.Count == 0)
                         {
                             Console.WriteLine("Không có giao dịch nào được thực hiện");
                             break;
-                        } 
+                        }
+
                         foreach (var transaction in listTransactions)
                         {
                             listPage.Add(transaction.ToString());
@@ -188,7 +189,8 @@ namespace spring_hero_bank_cSharp_assignment.View
                                     _accountController.UpdateEmail("123456789");
                                     break;
                                 case 3:
-                                    _accountController.UpdatePhoneNumber("123456789"); // instance account number just for test
+                                    _accountController
+                                        .UpdatePhoneNumber("123456789"); // instance account number just for test
                                     break;
                                 case 4:
                                     break;
@@ -199,6 +201,7 @@ namespace spring_hero_bank_cSharp_assignment.View
                                 break;
                             }
                         }
+
                         break;
                     case 10:
                         Console.WriteLine(" Thay đổi thông tin mật khẩu");
@@ -299,9 +302,11 @@ namespace spring_hero_bank_cSharp_assignment.View
             while (true)
             {
                 Console.Clear();
-                Console.WriteLine($"---------------------------- đang hiển thị trang {currentPageIndex + 1} trên tổng số {total} trang ----------------------------");
+                Console.WriteLine(
+                    $"---------------------------- đang hiển thị trang {currentPageIndex + 1} trên tổng số {total} trang ----------------------------");
                 Console.WriteLine(data[currentPageIndex]);
-                Console.WriteLine("--------------------------------------------------------------------------------------------------------------------------------");
+                Console.WriteLine(
+                    "--------------------------------------------------------------------------------------------------------------------------------");
                 Console.WriteLine("ấn > để next, ấn < để back, ấn esc để exit");
                 ConsoleKeyInfo keyInfo = Console.ReadKey(true);
                 int charKey = keyInfo.GetHashCode(); //get ascii code of keyboard character entered

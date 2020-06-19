@@ -39,9 +39,8 @@ namespace spring_hero_bank_cSharp_assignment.Model
         public bool CheckExistAccountByUsername(string username)
         {
             var cnn = ConnectionHelper.GetConnection();
-            bool result = false ;
+            bool result = false;
             cnn.Open();
-
 
             try
             {
@@ -50,24 +49,23 @@ namespace spring_hero_bank_cSharp_assignment.Model
                 var cmd = new MySqlCommand(
                     stringCmd, cnn);
                 var reader = cmd.ExecuteReader();
-                
+
                 if (reader.Read())
                 {
                     result = true;
                 }
+
                 reader.Close();
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw;
+                Console.WriteLine("Truy vấn database thất bại lỗi " + e.Message);
             }
             finally
             {
-                
                 cnn.Close();
             }
-            
+
             return result;
         }
 
@@ -86,8 +84,7 @@ namespace spring_hero_bank_cSharp_assignment.Model
             }
             catch (Exception e)
             {
-                Console.WriteLine("Loi ket noi dâtbase");
-                throw;
+                Console.WriteLine("Lỗi Kết nối database " + e.Message);
             }
             finally
             {
@@ -103,13 +100,15 @@ namespace spring_hero_bank_cSharp_assignment.Model
             try
             {
                 connection.Open();
-                var stringUpdateCmd = $"UPDATE `accounts` SET `{field}` = '{newData}' WHERE `accounts`.`accountNumber` = '{accountNumber}'; ";
+                var stringUpdateCmd =
+                    $"UPDATE `accounts` SET `{field}` = '{newData}' WHERE `accounts`.`accountNumber` = '{accountNumber}'; ";
                 MySqlCommand updateCmd = new MySqlCommand(stringUpdateCmd, connection);
                 int record = updateCmd.ExecuteNonQuery();
                 if (record == 0)
                 {
                     throw new Exception("Lỗi khi thao tác với Database");
                 }
+
                 connection.Close();
                 return true;
             }
@@ -119,6 +118,7 @@ namespace spring_hero_bank_cSharp_assignment.Model
                 connection.Close();
                 return false;
             }
+
             return false;
         }
     }

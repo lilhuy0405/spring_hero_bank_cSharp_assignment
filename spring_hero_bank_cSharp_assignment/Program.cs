@@ -16,9 +16,10 @@ namespace spring_hero_bank_cSharp_assignment
             Console.OutputEncoding = Encoding.UTF8; // console hiển thị dc tiếng việt có dấu
             Console.InputEncoding = Encoding.UTF8;
             var view = new ConsoleView();
-            view.LoginSuccess = true;
-            view.IsAdmin = true;
-            view.GenerateMainMenu();
+            // view.LoginSuccess = true;
+            // view.IsAdmin = true;
+            // view.GenerateMainMenu();
+            
         }
     }
 }
