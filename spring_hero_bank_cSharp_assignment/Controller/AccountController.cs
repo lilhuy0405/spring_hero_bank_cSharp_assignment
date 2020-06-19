@@ -6,13 +6,13 @@ using spring_hero_bank_cSharp_assignment.Model;
 
 namespace spring_hero_bank_cSharp_assignment.Controller
 {
-    
     public class AccountController
     {
         private PasswordHelper _passwordHelper = new PasswordHelper();
         private AccountModel _accountModel = new AccountModel();
         private AccountHelper _accountHelper = new AccountHelper();
         private ShbTransactionModel _transactionModel = new ShbTransactionModel();
+
         public bool LockAccount()
         {
             Console.WriteLine("Nhập vào số tài khoản bạn muốn khóa");
@@ -47,13 +47,14 @@ namespace spring_hero_bank_cSharp_assignment.Controller
         {
             Console.WriteLine("Nhập số tài khoản muốn tra cứu lịch sử giao dịch");
             var accountNumber = Console.ReadLine();
-            return  _transactionModel.GetTransactionsByAccountNumber(accountNumber);
+            return _transactionModel.GetTransactionsByAccountNumber(accountNumber);
         }
-        
+
+
         public void Register()
         {
             bool check = true;
-          
+
             var accountNumber = "";
             while (true)
             {
@@ -64,17 +65,16 @@ namespace spring_hero_bank_cSharp_assignment.Controller
                     break;
                 }
             }
-            
+
             var newAccount = new Account()
             {
-                Balance = 0 ,
-                Status = AccountStatus.ACTIVE ,
+                Balance = 0,
+                Status = AccountStatus.ACTIVE,
                 Salt = _passwordHelper.GenerateSalt(),
                 AccountNumber = accountNumber,
-                Role =   AccountRole.GUEST
-                
+                Role = AccountRole.GUEST
             };
-            
+
             Console.WriteLine("--Đăng kí--"); //tieng viet
             Console.WriteLine("Nhập tên đăng nhập");
             string username = Console.ReadLine();
@@ -85,24 +85,99 @@ namespace spring_hero_bank_cSharp_assignment.Controller
             }
 
             newAccount.Username = username;
-            
+
             Console.WriteLine("Enter password");
             var password = Console.ReadLine();
 
-            newAccount.PasswordHash = _passwordHelper.MD5Hash( newAccount.Salt+password );
-            
+            newAccount.PasswordHash = _passwordHelper.MD5Hash(newAccount.Salt + password);
+
             Console.WriteLine("Enter your full name");
             newAccount.FullName = Console.ReadLine();
-            
+
             Console.WriteLine("Enter your email");
             newAccount.Email = Console.ReadLine();
 
             Console.WriteLine("Enter your phone number");
             newAccount.PhoneNumber = Console.ReadLine();
-            
+
             //Console.WriteLine(newAccount.ToString());
             _accountModel.SaveAccount(newAccount);
+        }
 
+        public bool UpdatePhoneNumber(string accountNumber)
+        {
+            Console.WriteLine("Nhập số điện thoại mới của bạn");
+            string newPhoneNumber = Console.ReadLine();
+            //TODO: validate phoneNumber input
+            var res = _accountModel.UpdateAccountByAccountNumber(accountNumber, "phoneNumber", newPhoneNumber);
+            if (res == true)
+            {
+                Console.WriteLine($"Đã update số điện thoại của số tài khoản {accountNumber} thành công");
+            }
+            else
+            {
+                Console.WriteLine("Update thông tin thất bại");
+                return false;
+            }
+
+            return false;
+        }
+
+        public bool UpdateFullName(string accountNumber)
+        {
+            Console.WriteLine("Nhập tên đầy đủ mới của bạn");
+            string newFullName = Console.ReadLine();
+
+            var res = _accountModel.UpdateAccountByAccountNumber(accountNumber, "fullName", newFullName);
+            if (res == true)
+            {
+                Console.WriteLine($"Đã update  tên của số tài khoản {accountNumber} thành công");
+            }
+            else
+            {
+                Console.WriteLine("Update thông tin thất bại");
+                return false;
+            }
+
+            return false;
+        }
+
+        public bool UpdateEmail(string accountNumber)
+        {
+            Console.WriteLine("Nhập email mới của bạn");
+            string newEmail = "";
+            while (true)
+            {
+                newEmail = Console.ReadLine();
+                if (ValidateHelper.IsEmailValid(newEmail))
+                {
+                    break;
+                }
+                else
+                {
+                    continue;
+                }
+            }
+
+            var res = _accountModel.UpdateAccountByAccountNumber(accountNumber, "email", newEmail);
+            if (res == true)
+            {
+                Console.WriteLine($"Đã update email của số tài khoản {accountNumber} thành công");
+            }
+            else
+            {
+                Console.WriteLine("Update thông tin thất bại");
+                return false;
+            }
+
+            return false;
+        }
+
+        public bool UpdatePassWord(string accountNumber)
+        {
+            Console.WriteLine("Nhập mật khẩu cũ của bạn: ");
+            string oldPassWord = Console.ReadLine();
+            return false;
         }
     }
 }
