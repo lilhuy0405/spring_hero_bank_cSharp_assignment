@@ -18,6 +18,7 @@ namespace spring_hero_bank_cSharp_assignment.Model
             cnn.Close();
             return listAccount;
         }
+
         //TODO: put code in try catch
         public List<SHBTransaction> GetListTransaction() // Lấy danh sách giao dịch 
         {
@@ -28,7 +29,7 @@ namespace spring_hero_bank_cSharp_assignment.Model
             cnn.Close();
             return listTransaction;
         }
-        
+
         public bool UpdateAccountStatusByAccountNumber(string accountNumber, AccountStatus status)
         {
             var connection = ConnectionHelper.GetConnection();
@@ -90,10 +91,8 @@ namespace spring_hero_bank_cSharp_assignment.Model
         public bool CheckExistAccountByUsername(string username)
         {
             var cnn = ConnectionHelper.GetConnection();
-            bool result = false ;
+            bool result = false;
             cnn.Open();
-
-
             try
             {
                 var stringCmd = $"SELECT userName FROM accounts WHERE userName = '{username}'";
@@ -101,11 +100,12 @@ namespace spring_hero_bank_cSharp_assignment.Model
                 var cmd = new MySqlCommand(
                     stringCmd, cnn);
                 var reader = cmd.ExecuteReader();
-                
+
                 if (reader.Read())
                 {
                     result = true;
                 }
+
                 reader.Close();
             }
             catch (Exception e)
@@ -115,10 +115,9 @@ namespace spring_hero_bank_cSharp_assignment.Model
             }
             finally
             {
-                
                 cnn.Close();
             }
-            
+
             return result;
         }
 
@@ -154,13 +153,15 @@ namespace spring_hero_bank_cSharp_assignment.Model
             try
             {
                 connection.Open();
-                var stringUpdateCmd = $"UPDATE `accounts` SET `{field}` = '{newData}' WHERE `accounts`.`accountNumber` = '{accountNumber}'; ";
+                var stringUpdateCmd =
+                    $"UPDATE `accounts` SET `{field}` = '{newData}' WHERE `accounts`.`accountNumber` = '{accountNumber}'; ";
                 MySqlCommand updateCmd = new MySqlCommand(stringUpdateCmd, connection);
                 int record = updateCmd.ExecuteNonQuery();
                 if (record == 0)
                 {
                     throw new Exception("Lỗi khi thao tác với Database");
                 }
+
                 connection.Close();
                 return true;
             }
@@ -170,13 +171,13 @@ namespace spring_hero_bank_cSharp_assignment.Model
                 connection.Close();
                 return false;
             }
-            return false;
 
+            return false;
         }
-        
+
         public double GetCurrentBlanceByAccountNumber(string accountNumber) //TODO: fix typo
         {
-            double currentBalane  ;
+            double currentBalane;
             var cnn = ConnectionHelper.GetConnection();
             cnn.Open();
             try
@@ -191,7 +192,7 @@ namespace spring_hero_bank_cSharp_assignment.Model
                 }
 
                 currentBalane = accountReader.GetDouble("balance");
-               
+
                 accountReader.Close();
             }
             catch (Exception e)
@@ -204,7 +205,7 @@ namespace spring_hero_bank_cSharp_assignment.Model
                 cnn.Close();
             }
 
-            return  currentBalane;
+            return currentBalane;
         }
 
         public bool UpdateIncreaseBalanceByAccountNumber(string accountNumber, double newBalance)
@@ -237,10 +238,9 @@ namespace spring_hero_bank_cSharp_assignment.Model
             }
 
             return result;
-
         }
 
-        public bool UpdateDecreaseBalanceByAccountNumber(string accountNumber, double decreaseAmountAfterFee)//typo
+        public bool UpdateDecreaseBalanceByAccountNumber(string accountNumber, double decreaseAmountAfterFee) //typo
         {
             var cnn = ConnectionHelper.GetConnection();
             cnn.Open();
@@ -272,8 +272,6 @@ namespace spring_hero_bank_cSharp_assignment.Model
             }
 
             return result;
-
         }
     }
-    
 }

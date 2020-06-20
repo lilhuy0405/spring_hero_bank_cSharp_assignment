@@ -21,6 +21,7 @@ namespace spring_hero_bank_cSharp_assignment.Controller
                         $"SERVER={DatabaseServer};DATABASE={DatabaseName};UID={DatabaseUid};PASSWORD={DatabasePassword}");
                 Console.WriteLine("...success!");
             }
+
             return _connection;
         }
     }

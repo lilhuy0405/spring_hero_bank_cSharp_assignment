@@ -14,8 +14,7 @@ namespace spring_hero_bank_cSharp_assignment.Controller
         private AccountHelper _accountHelper = new AccountHelper();
         private ShbTransactionModel _transactionModel = new ShbTransactionModel();
 
-   
-        
+
         public Account Login() // Đăng nhập hệ thống 
         {
             Console.WriteLine("Login...");
@@ -84,7 +83,6 @@ namespace spring_hero_bank_cSharp_assignment.Controller
         // 7.1. Khóa tài khoản người dùng
 
 
-
         public bool LockAccount()
         {
             Console.WriteLine("Nhập vào số tài khoản bạn muốn khóa");
@@ -121,7 +119,6 @@ namespace spring_hero_bank_cSharp_assignment.Controller
             Console.WriteLine("Nhập số tài khoản muốn tra cứu lịch sử giao dịch");
             var accountNumber = Console.ReadLine();
             return _transactionModel.GetTransactionsByAccountNumber(accountNumber);
-
         }
 
 
@@ -176,7 +173,7 @@ namespace spring_hero_bank_cSharp_assignment.Controller
 
             //Console.WriteLine(newAccount.ToString());
             _accountModel.SaveAccount(newAccount);
-        }    
+        }
 
         public bool UpdatePhoneNumber(string accountNumber)
         {

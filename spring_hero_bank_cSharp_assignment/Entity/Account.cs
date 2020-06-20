@@ -12,7 +12,7 @@
         public AccountRole Role { get; set; }
         public AccountStatus Status { get; set; }
         public double Balance { get; set; }
-        
+
         public override string ToString()
         {
             return
@@ -28,7 +28,7 @@
                 $"Số dư: {Balance}\n";
         }
     }
-    
+
     public enum AccountStatus
     {
         ACTIVE = 1,
