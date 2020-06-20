@@ -11,23 +11,41 @@ namespace spring_hero_bank_cSharp_assignment.Model
     {
         public List<Account> GetListAccount() // Lấy danh sách người dùng 
         {
-            var listAccount = new List<Account>();
-            var cnn = ConnectionHelper.GetConnection();
-            cnn.Open();
-            var cmd = new MySqlCommand("select * from accounts", cnn);
-            cnn.Close();
-            return listAccount;
+            try
+            {
+                var listAccount = new List<Account>();
+                var cnn = ConnectionHelper.GetConnection();
+                cnn.Open();
+                var cmd = new MySqlCommand("select * from accounts", cnn);
+                cnn.Close();
+                return listAccount;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            return null;
         }
 
         //TODO: put code in try catch
         public List<SHBTransaction> GetListTransaction() // Lấy danh sách giao dịch 
         {
-            var listTransaction = new List<SHBTransaction>();
-            var cnn = ConnectionHelper.GetConnection();
-            cnn.Open();
-            var cmd = new MySqlCommand("select * from shb-transactions", cnn);
-            cnn.Close();
-            return listTransaction;
+            try
+            {
+                var listTransaction = new List<SHBTransaction>();
+                var cnn = ConnectionHelper.GetConnection();
+                cnn.Open();
+                var cmd = new MySqlCommand("select * from shb-transactions", cnn);
+                cnn.Close();
+                return listTransaction;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            return null;
         }
 
         public bool UpdateAccountStatusByAccountNumber(string accountNumber, AccountStatus status)
