@@ -99,13 +99,13 @@ namespace spring_hero_bank_cSharp_assignment.View
                         Console.WriteLine("danh sách người dùng");
                         Console.WriteLine(
                             "---------------------------------------------------------------------------------");
-                        _accountController.ListAccount();
+                        _accountController.GetListAccount();
                         break;
                     case 2:
                         Console.WriteLine("Danh sách lịch sử giao dịch");
                         Console.WriteLine(
                             "---------------------------------------------------------------------------------");
-                        _accountController.ListTransaction();
+                        _accountController.GetListTransaction();
                         break;
                     case 3:
                         Console.WriteLine("Tìm kiếm người dùng theo tên");

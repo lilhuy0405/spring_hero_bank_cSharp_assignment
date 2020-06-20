@@ -35,24 +35,28 @@ namespace spring_hero_bank_cSharp_assignment.Controller
 
         // 1. Danh sách người dùng // hàm này cần return về 1 list chứ k p là in ra list
         //TODO: refactor this -> public list<Account> GetListAccount()
-        public void ListAccount()
+        public List<Account> GetListAccount()
         {
             Console.WriteLine("Danh sách người dùng: ");
             foreach (var account in _accountModel.GetListAccount())
             {
                 Console.WriteLine(account.ToString());
             }
+
+            return GetListAccount();
         }
 
         // 2. Danh sách lịch sử giao dịch
         //TODO: refactor -> public list<SHbTransaction> getListTranSaction
-        public void ListTransaction()
+        public List<SHBTransaction> GetListTransaction()
         {
             Console.WriteLine("Danh sách lịch sử giao dịch: ");
             foreach (var transaction in _accountModel.GetListTransaction())
             {
                 Console.WriteLine(transaction.ToString());
             }
+
+            return GetListTransaction();
         }
 
         // 3. Tìm kiếm người dùng theo tên.
