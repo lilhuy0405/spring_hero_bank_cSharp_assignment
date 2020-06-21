@@ -213,19 +213,19 @@ namespace spring_hero_bank_cSharp_assignment.Model
             var minBalance = 50000;
             var cnn = ConnectionHelper.GetConnection();
 
-            // tao moi tracsaction -> save db
+         
             cnn.Open();
             var transaction = cnn.BeginTransaction();
             try
             {
                 var stringCmdGetAccount =
-                    $"SELECT balance from `accounts` WHERE accountNumber = {accountNumber} and status = 1 ";
+                    $"SELECT balance from `accounts` WHERE accountNumber = '{accountNumber}' and status = {(int) AccountStatus.ACTIVE}";
                 var cmdGetAccount = new MySqlCommand(stringCmdGetAccount, cnn);
                 var accountReader = cmdGetAccount.ExecuteReader();
                 if (!accountReader.Read())
                 {
                     accountReader.Close();
-                    throw new Exception("Account  is not  found or has been deleted");
+                    throw new Exception("Không tìm thấy tài khoản hoặc tài khoản đã bị khóa");
                 }
 
                 var currentBalence = accountReader.GetDouble("balance");
@@ -246,7 +246,6 @@ namespace spring_hero_bank_cSharp_assignment.Model
                     Status = TransactionStatus.PENDING
                 };
                 //lưu transaction pending vào database
-                // var check= _shbTransactionModel.InsertNewShbTransaction(shbTransaction);
                 string insertShbTransactionStringCmd =
                     $"INSERT INTO `shb-transactions` VAlUES ('{shbTransaction.Code}','{shbTransaction.SenderAccountNumber}','{shbTransaction.ReceiverAccountNumber}','{shbTransaction.Message}',{shbTransaction.Amount},{shbTransaction.Fee},'{shbTransaction.CreateAt:yyyy-MM-dd hh:mm:ss}','{shbTransaction.UpdateAt:yyyy-MM-dd hh:mm:ss}',{(int) shbTransaction.Status},{(int) shbTransaction.Type}) ";
                 var insertShbTransactionCmd = new MySqlCommand(insertShbTransactionStringCmd, cnn);
@@ -254,12 +253,15 @@ namespace spring_hero_bank_cSharp_assignment.Model
                 //update so du
 
                 currentBalence = currentBalence - amount - shbTransaction.Fee;
+                //new so du khong hop le thi commit 1 failed transaction vao database
                 if (currentBalence < minBalance)
                 {
-                   //TODO: UPDATE TIME
+                    var updateTime = new DateTime();
                     var updateTransactionFailStringCmd =
-                        $"UPDATE `shb-transactions` SET status =' {(int) TransactionStatus.FAILED}' WHERE code = '{shbTransactionCode}'";
-                    var  updateTransactionFailCmd =  new MySqlCommand(updateTransactionFailStringCmd,cnn);              
+                        $"UPDATE `shb-transactions` SET status =' {(int) TransactionStatus.FAILED}', updateAt = '{updateTime:yyyy-MM-dd hh:mm:ss}' WHERE code = '{shbTransactionCode}'";
+                    var  updateTransactionFailCmd =  new MySqlCommand(updateTransactionFailStringCmd,cnn);
+                    updateTransactionFailCmd.ExecuteNonQuery();
+                    
                     transaction.Commit();
                     cnn.Close();
                     Console.WriteLine("Số dư tìa khoản không đu để thực hiện giao địch");
@@ -272,16 +274,16 @@ namespace spring_hero_bank_cSharp_assignment.Model
                 int affectedRecord = updateBalanceCmd.ExecuteNonQuery();
                 if (affectedRecord == 0)
                 {
-                    throw new Exception("Lưu so dư mới thất bại");
+                    throw new Exception("cập nhật số dư mới thất bại");
                 }
-
-                string updatShbTransactionStatusCmdString =
+                //update transaction thành done
+                string updateShbTransactionStatusCmdString =
                     $"UPDATE `shb-transactions` SET status =' {(int) TransactionStatus.DONE}' WHERE code = '{shbTransactionCode}'";
-                var updateShbTransactionStatusCmd = new MySqlCommand(updatShbTransactionStatusCmdString, cnn);
+                var updateShbTransactionStatusCmd = new MySqlCommand(updateShbTransactionStatusCmdString, cnn);
                 var updated = updateShbTransactionStatusCmd.ExecuteNonQuery();
                 if (updated == 0)
                 {
-                    throw new Exception("Update transaction thất bại");
+                    throw new Exception("cập nhật lịch sử giao dịc thất bại");
                 }
 
                 transaction.Commit();
@@ -290,31 +292,30 @@ namespace spring_hero_bank_cSharp_assignment.Model
             }
             catch (Exception e)
             {
-                Console.WriteLine("gửi tiền thất bại " + e.Message);
+                Console.WriteLine("rút tiền thất bại " + e.Message);
                 Console.WriteLine(e);
                 transaction.Rollback();
-                // cnn.Close();
+                cnn.Close();
                 return false;
             }
         }
 
         public bool Deposit(string accountNumber, double amount)
         {
+            //amount da dc validate > 0 o controller
             var cnn = ConnectionHelper.GetConnection();
-
-            // tao moi tracsaction -> save db
             cnn.Open();
             var transaction = cnn.BeginTransaction();
             try
             {
                 var stringCmdGetAccount =
-                    $"SELECT balance from `accounts` WHERE accountNumber = {accountNumber} and status = 1 ";
+                    $"SELECT balance from `accounts` WHERE accountNumber = {accountNumber} and status = {(int) AccountStatus.ACTIVE};";
                 var cmdGetAccount = new MySqlCommand(stringCmdGetAccount, cnn);
                 var accountReader = cmdGetAccount.ExecuteReader();
                 if (!accountReader.Read())
                 {
                     accountReader.Close();
-                    throw new Exception("Account  is not  found or has been deleted");
+                    throw new Exception("Tài khoản không tồn tại hoặc đã bị xóa");
                 }
 
                 var currentBalence = accountReader.GetDouble("balance");
@@ -331,17 +332,15 @@ namespace spring_hero_bank_cSharp_assignment.Model
                     Fee = 1100,
                     Message = "Deposit" + amount,
                     CreateAt = DateTime.Now,
-                    // UpdateAt = DateTime.Now,
+                    UpdateAt = DateTime.Now,
                     Status = TransactionStatus.PENDING
                 };
                 //lưu transaction pending vào database
-                // var check= _shbTransactionModel.InsertNewShbTransaction(shbTransaction);
                 string insertShbTransactionStringCmd =
                     $"INSERT INTO `shb-transactions` VAlUES ('{shbTransaction.Code}','{shbTransaction.SenderAccountNumber}','{shbTransaction.ReceiverAccountNumber}','{shbTransaction.Message}',{shbTransaction.Amount},{shbTransaction.Fee},'{shbTransaction.CreateAt:yyyy-MM-dd hh:mm:ss}','{shbTransaction.UpdateAt:yyyy-MM-dd hh:mm:ss}',{(int) shbTransaction.Status},{(int) shbTransaction.Type}) ";
                 var insertShbTransactionCmd = new MySqlCommand(insertShbTransactionStringCmd, cnn);
                 insertShbTransactionCmd.ExecuteNonQuery();
-                //update so du
-
+                //update so du moi
                 currentBalence = currentBalence + amount - shbTransaction.Fee;
 
                 var updateBalanceStringCmd =
@@ -350,22 +349,17 @@ namespace spring_hero_bank_cSharp_assignment.Model
                 int affectedRecord = updateBalanceCmd.ExecuteNonQuery();
                 if (affectedRecord == 0)
                 {
-                    throw new Exception("Lưu so dư mới thất bại");
+                    throw new Exception("cập nhật số dư mới thất bại");
                 }
-
-                //update trang thai transaction
-                // var updateSuccess = _shbTransactionModel.UpdateShbTransactionStatus(shbTrasnasctionCode, TransactionStatus.DONE);
-                // if (!updateSuccess)
-                // {
-                //     throw new Exception("cập nhật transaction thất bại");
-                // }
-                string updatShbTransactionStatusCmdString =
-                    $"UPDATE `shb-transactions` SET status =' {(int) TransactionStatus.DONE}' WHERE code = '{shbTransactionCode}'";
-                var updateShbTransactionStatusCmd = new MySqlCommand(updatShbTransactionStatusCmdString, cnn);
+                //update trạng thái transaction pending -> done
+                var updateTime = DateTime.Now;
+                string updateShbTransactionStatusCmdString =
+                    $"UPDATE `shb-transactions` SET status = {(int) TransactionStatus.DONE}, updateAt = '{updateTime:yyyy-MM-dd hh:mm:ss}' WHERE code = '{shbTransactionCode}'";
+                var updateShbTransactionStatusCmd = new MySqlCommand(updateShbTransactionStatusCmdString, cnn);
                 var updated = updateShbTransactionStatusCmd.ExecuteNonQuery();
                 if (updated == 0)
                 {
-                    throw new Exception("Update transaction thất bại");
+                    throw new Exception("Cập nhật lịch sử giao dịch thất bại");
                 }
 
                 transaction.Commit();
@@ -377,7 +371,7 @@ namespace spring_hero_bank_cSharp_assignment.Model
                 Console.WriteLine("gửi tiền thất bại " + e.Message);
                 Console.WriteLine(e);
                 transaction.Rollback();
-                // cnn.Close();
+                cnn.Close();
                 return false;
             }
         }

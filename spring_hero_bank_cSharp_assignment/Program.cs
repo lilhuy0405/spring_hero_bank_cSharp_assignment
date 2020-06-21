@@ -17,8 +17,8 @@ namespace spring_hero_bank_cSharp_assignment
          Console.OutputEncoding = Encoding.UTF8;
          Console.InputEncoding = Encoding.UTF8;
          var acc = new AccountModel();
-         Console.WriteLine(acc.Withdraw("0000000000", 50000));
-         
+         Console.WriteLine(acc.Deposit("1234569789", 10000));
+         Console.WriteLine(acc.Withdraw("123456789", 20000));
 
         }
     }
