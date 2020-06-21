@@ -13,12 +13,13 @@ namespace spring_hero_bank_cSharp_assignment
     {
         public static void Main(string[] args)
         {
-            Console.OutputEncoding = Encoding.UTF8; // console hiển thị dc tiếng việt có dấu
-            Console.InputEncoding = Encoding.UTF8;
-            var view = new ConsoleView();
-            // view.LoginSuccess = true;
-            // view.IsAdmin = true;
-            // view.GenerateMainMenu();
+            //   view.GenerateMainMenu();
+         Console.OutputEncoding = Encoding.UTF8;
+         Console.InputEncoding = Encoding.UTF8;
+         var acc = new AccountModel();
+         Console.WriteLine(acc.Withdraw("0000000000", 50000));
+         
+
         }
     }
 }
