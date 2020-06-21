@@ -15,6 +15,7 @@ namespace spring_hero_bank_cSharp_assignment.Entity
         public DateTime UpdateAt { get; set; }
         public TransactionStatus Status { get; set; }
         public TransactionType Type { get; set; }
+
         public override string ToString()
         {
             return $"Mã giao dịch: {this.Code}\n" +
@@ -28,7 +29,7 @@ namespace spring_hero_bank_cSharp_assignment.Entity
                    $"trạng thái giao dịch {this.Status.ToString()}";
         }
     }
-    
+
     public enum TransactionType
     {
         WITHDRAW = 1, //rut tien
@@ -42,5 +43,4 @@ namespace spring_hero_bank_cSharp_assignment.Entity
         DONE = 2,
         FAILED = 0
     }
- 
 }

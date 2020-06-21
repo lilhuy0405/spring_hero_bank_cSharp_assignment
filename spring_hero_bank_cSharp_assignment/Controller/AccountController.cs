@@ -14,8 +14,7 @@ namespace spring_hero_bank_cSharp_assignment.Controller
         private AccountHelper _accountHelper = new AccountHelper();
         private ShbTransactionModel _transactionModel = new ShbTransactionModel();
 
-   
-        
+
         public Account Login() // Đăng nhập hệ thống 
         {
             Console.WriteLine("Login...");
@@ -34,11 +33,9 @@ namespace spring_hero_bank_cSharp_assignment.Controller
             return null;
         }
 
-        // 1. Danh sách người dùng // hàm này cần return về 1 list chứ k p là in ra list
-        //TODO: refactor this -> public list<Account> GetListAccount()
+        // 1. Danh sách người dùng
         public void ListAccount()
         {
-            Console.WriteLine("Danh sách người dùng: ");
             foreach (var account in _accountModel.GetListAccount())
             {
                 Console.WriteLine(account.ToString());
@@ -46,10 +43,8 @@ namespace spring_hero_bank_cSharp_assignment.Controller
         }
 
         // 2. Danh sách lịch sử giao dịch
-        //TODO: refactor -> public list<SHbTransaction> getListTranSaction
         public void ListTransaction()
         {
-            Console.WriteLine("Danh sách lịch sử giao dịch: ");
             foreach (var transaction in _accountModel.GetListTransaction())
             {
                 Console.WriteLine(transaction.ToString());
@@ -57,32 +52,97 @@ namespace spring_hero_bank_cSharp_assignment.Controller
         }
 
         // 3. Tìm kiếm người dùng theo tên.
-        public void SearchAccountByName()
+        public Account SearchAccountByName()
         {
             Console.WriteLine("Tìm kiếm người dùng theo tên: ");
+            var fullName = Console.ReadLine();
+            var account = _accountModel.GetAccountByName(fullName);
+            if (account == _accountModel.GetAccountByName(account.FullName))
+            {
+                return account;
+            }
+            return null;
         }
 
         // 4. Tìm kiếm người dùng theo số tài khoản.
-        public void SearchAccountByAccountNumber()
+        public Account SearchAccountByAccountNumber()
         {
             Console.WriteLine("Tìm kiếm người dùng theo số tài khoản: ");
+            var accountNumber = Console.ReadLine();
+            var account = _accountModel.GetAccountByName(accountNumber);
+            if (account == _accountModel.GetAccountByAccountNumber(account.AccountNumber))
+            {
+                return account;
+            }
+            return null;
         }
 
         // 5. Tìm kiếm người dùng theo số điện thoại
-        public void SearchAccountByPhone()
+        public Account SearchAccountByPhoneNumber()
         {
             Console.WriteLine("Tìm kiếm người dùng theo số điện thoại: ");
+            var phoneNumber = Console.ReadLine();
+            var account = _accountModel.GetAccountByName(phoneNumber);
+            if (account == _accountModel.GetAccountByPhoneNumber(account.PhoneNumber))
+            {
+                return account;
+            }
+            return null;
         }
 
         // 6. Thêm người dùng mới
-        public void AddAccount()
+        public void AddUser()
         {
-            Console.WriteLine("Thêm người dùng mới: ");
+            string accountNumber;
+            while (true)
+            {
+                accountNumber = _accountHelper.RamdomAccountNumber();
+                var isExist = _accountModel.CheckExistAccountByUsername(accountNumber);
+                if (isExist == false)
+                {
+                    break;
+                }
+            }
+
+            var newAccount = new Account()
+            {
+                Balance = 0,
+                Status = AccountStatus.ACTIVE,
+                Salt = _passwordHelper.GenerateSalt(),
+                AccountNumber = accountNumber,
+                Role = AccountRole.GUEST
+            };
+
+            Console.WriteLine("--Đăng kí--"); //tieng viet
+            Console.WriteLine("Nhập tên đăng nhập");
+            string username = Console.ReadLine();
+            while (_accountModel.CheckExistAccountByUsername(username))
+            {
+                Console.WriteLine("Tên đăng nhập đã tồn tại vui long chon tên đăng nhập khác");
+                username = Console.ReadLine();
+            }
+
+            newAccount.Username = username;
+
+            Console.WriteLine("Enter password");
+            var password = Console.ReadLine();
+
+            newAccount.PasswordHash = _passwordHelper.MD5Hash(newAccount.Salt + password);
+
+            Console.WriteLine("Enter your full name");
+            newAccount.FullName = Console.ReadLine();
+
+            Console.WriteLine("Enter your email");
+            newAccount.Email = Console.ReadLine();
+
+            Console.WriteLine("Enter your phone number");
+            newAccount.PhoneNumber = Console.ReadLine();
+            
+            _accountModel.SaveAccount(newAccount);
         }
 
         // 7. Khoá và mở tài khoản người dùng
         // 7.1. Khóa tài khoản người dùng
-
 
 
         public bool LockAccount()
@@ -121,7 +181,6 @@ namespace spring_hero_bank_cSharp_assignment.Controller
             Console.WriteLine("Nhập số tài khoản muốn tra cứu lịch sử giao dịch");
             var accountNumber = Console.ReadLine();
             return _transactionModel.GetTransactionsByAccountNumber(accountNumber);
-
         }
 
 
@@ -176,7 +235,7 @@ namespace spring_hero_bank_cSharp_assignment.Controller
 
             //Console.WriteLine(newAccount.ToString());
             _accountModel.SaveAccount(newAccount);
-        }    
+        }
 
         public bool UpdatePhoneNumber(string accountNumber)
         {
