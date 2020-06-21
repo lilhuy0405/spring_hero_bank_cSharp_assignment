@@ -19,6 +19,10 @@ namespace spring_hero_bank_cSharp_assignment
          //   view.LoginSuccess = true;
          //   view.IsAdmin = true;
          //   view.GenerateMainMenu();
+         Console.OutputEncoding = Encoding.UTF8;
+         Console.InputEncoding = Encoding.UTF8;
+         var acc = new AccountModel();
+         Console.WriteLine(acc.Withdraw("0000000000", 50000));
          
         }
     }
