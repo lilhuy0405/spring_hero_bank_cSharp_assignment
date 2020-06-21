@@ -125,6 +125,7 @@ namespace spring_hero_bank_cSharp_assignment.View
                         Console.WriteLine(" Thêm người dùng mới");
                         Console.WriteLine(
                             "---------------------------------------------------------------------------------");
+                        _accountController.AddUser();
                         break;
                     case 7:
                         Console.WriteLine("Khoá và mở tài khoản người dùng");

@@ -91,9 +91,54 @@ namespace spring_hero_bank_cSharp_assignment.Controller
         }
 
         // 6. Thêm người dùng mới
-        public void AddAccount()
+        public void AddUser()
         {
-            Console.WriteLine("Thêm người dùng mới: ");
+            string accountNumber;
+            while (true)
+            {
+                accountNumber = _accountHelper.RamdomAccountNumber();
+                var isExist = _accountModel.CheckExistAccountByUsername(accountNumber);
+                if (isExist == false)
+                {
+                    break;
+                }
+            }
+
+            var newAccount = new Account()
+            {
+                Balance = 0,
+                Status = AccountStatus.ACTIVE,
+                Salt = _passwordHelper.GenerateSalt(),
+                AccountNumber = accountNumber,
+                Role = AccountRole.GUEST
+            };
+
+            Console.WriteLine("--Đăng kí--"); //tieng viet
+            Console.WriteLine("Nhập tên đăng nhập");
+            string username = Console.ReadLine();
+            while (_accountModel.CheckExistAccountByUsername(username))
+            {
+                Console.WriteLine("Tên đăng nhập đã tồn tại vui long chon tên đăng nhập khác");
+                username = Console.ReadLine();
+            }
+
+            newAccount.Username = username;
+
+            Console.WriteLine("Enter password");
+            var password = Console.ReadLine();
+
+            newAccount.PasswordHash = _passwordHelper.MD5Hash(newAccount.Salt + password);
+
+            Console.WriteLine("Enter your full name");
+            newAccount.FullName = Console.ReadLine();
+
+            Console.WriteLine("Enter your email");
+            newAccount.Email = Console.ReadLine();
+
+            Console.WriteLine("Enter your phone number");
+            newAccount.PhoneNumber = Console.ReadLine();
+            
+            _accountModel.SaveAccount(newAccount);
         }
 
         // 7. Khoá và mở tài khoản người dùng
