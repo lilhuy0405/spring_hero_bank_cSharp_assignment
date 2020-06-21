@@ -10,6 +10,8 @@ namespace spring_hero_bank_cSharp_assignment.View
     public class ConsoleView
     {
         private static Account _currentLogin;
+        public bool LoginSuccess { get; set; } //for test
+        public bool IsAdmin { get; set; } //for test
         private AccountController _accountController = new AccountController();
 
         public void GenerateMainMenu()
@@ -51,8 +53,7 @@ namespace spring_hero_bank_cSharp_assignment.View
                         {
                             GenerateCustomMenu();
                         }
-
-
+                        
                         break;
                     case 3:
                         Console.WriteLine("Thoát");

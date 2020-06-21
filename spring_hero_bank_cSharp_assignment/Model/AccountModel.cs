@@ -217,8 +217,7 @@ namespace spring_hero_bank_cSharp_assignment.Model
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw;
+                Console.WriteLine("Truy vấn database thất bại lỗi " + e.Message);
             }
             finally
             {
@@ -244,8 +243,7 @@ namespace spring_hero_bank_cSharp_assignment.Model
             }
             catch (Exception e)
             {
-                Console.WriteLine("Loi ket noi dâtbase");
-                throw;
+                Console.WriteLine("Lỗi Kết nối database " + e.Message);
             }
             finally
             {
@@ -279,8 +277,6 @@ namespace spring_hero_bank_cSharp_assignment.Model
                 connection.Close();
                 return false;
             }
-
-            return false;
         }
 
         public double GetCurrentBlanceByAccountNumber(string accountNumber) //TODO: fix typo
@@ -315,7 +311,7 @@ namespace spring_hero_bank_cSharp_assignment.Model
 
             return currentBalane;
         }
-
+        
         public bool UpdateIncreaseBalanceByAccountNumber(string accountNumber, double newBalance)
         {
             var cnn = ConnectionHelper.GetConnection();
@@ -381,7 +377,7 @@ namespace spring_hero_bank_cSharp_assignment.Model
 
             return result;
         }
-        
+
         public bool Withdraw(string accountNumber, double amount)
         {
             var minBalance = 50000;
