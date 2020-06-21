@@ -27,8 +27,7 @@ namespace spring_hero_bank_cSharp_assignment.Model
 
             return null;
         }
-
-        //TODO: put code in try catch
+        
         public List<SHBTransaction> GetListTransaction() // Lấy danh sách giao dịch 
         {
             try
@@ -46,6 +45,96 @@ namespace spring_hero_bank_cSharp_assignment.Model
             }
 
             return null;
+        }
+
+        public Account GetAccountByName(string fullName) // Tìm kiếm người dùng theo tên
+        {
+            Account account = null;
+            var cnn = ConnectionHelper.GetConnection();
+            cnn.Open();
+            var cmd = new MySqlCommand(
+                $"select * from accounts where fullName = '{fullName}'",
+                cnn);
+            var reader = cmd.ExecuteReader();
+            if (reader.Read())
+            {
+                account = new Account()
+                {
+                    FullName = reader.GetString("fullName"),
+                    AccountNumber = reader.GetString("accountNumber"),
+                    PhoneNumber = reader.GetString("phoneNumber"),
+                    Email = reader.GetString("email"),
+                    Salt = reader.GetString("salt"),
+                    PasswordHash = reader.GetString("passwordHash"),
+                    Username = reader.GetString("username"),
+                    Role = (AccountRole) reader.GetInt32("role"),
+                    Status = (AccountStatus) reader.GetInt32("status"),
+                    Balance = reader.GetDouble("balance")
+                };
+            }
+
+            cnn.Close();
+            return account;
+        }
+        
+        public Account GetAccountByAccountNumber(string accountNumber) // Tìm kiếm người dùng theo số tài khoản
+        {
+            Account account = null;
+            var cnn = ConnectionHelper.GetConnection();
+            cnn.Open();
+            var cmd = new MySqlCommand(
+                $"select * from accounts where accountNumber = '{accountNumber}'",
+                cnn);
+            var reader = cmd.ExecuteReader();
+            if (reader.Read())
+            {
+                account = new Account()
+                {
+                    FullName = reader.GetString("fullName"),
+                    AccountNumber = reader.GetString("accountNumber"),
+                    PhoneNumber = reader.GetString("phoneNumber"),
+                    Email = reader.GetString("email"),
+                    Salt = reader.GetString("salt"),
+                    PasswordHash = reader.GetString("passwordHash"),
+                    Username = reader.GetString("username"),
+                    Role = (AccountRole) reader.GetInt32("role"),
+                    Status = (AccountStatus) reader.GetInt32("status"),
+                    Balance = reader.GetDouble("balance")
+                };
+            }
+
+            cnn.Close();
+            return account;
+        }
+        
+        public Account GetAccountByPhoneNumber(string phoneNumber) // Tìm kiếm người dùng theo số điện thoại
+        {
+            Account account = null;
+            var cnn = ConnectionHelper.GetConnection();
+            cnn.Open();
+            var cmd = new MySqlCommand(
+                $"select * from accounts where phoneNumber = '{phoneNumber}'",
+                cnn);
+            var reader = cmd.ExecuteReader();
+            if (reader.Read())
+            {
+                account = new Account()
+                {
+                    FullName = reader.GetString("fullName"),
+                    AccountNumber = reader.GetString("accountNumber"),
+                    PhoneNumber = reader.GetString("phoneNumber"),
+                    Email = reader.GetString("email"),
+                    Salt = reader.GetString("salt"),
+                    PasswordHash = reader.GetString("passwordHash"),
+                    Username = reader.GetString("username"),
+                    Role = (AccountRole) reader.GetInt32("role"),
+                    Status = (AccountStatus) reader.GetInt32("status"),
+                    Balance = reader.GetDouble("balance")
+                };
+            }
+
+            cnn.Close();
+            return account;
         }
 
         public bool UpdateAccountStatusByAccountNumber(string accountNumber, AccountStatus status)
@@ -89,7 +178,7 @@ namespace spring_hero_bank_cSharp_assignment.Model
             {
                 account = new Account()
                 {
-                    FullName = reader.GetString("fullname"),
+                    FullName = reader.GetString("fullName"),
                     AccountNumber = reader.GetString("accountNumber"),
                     PhoneNumber = reader.GetString("phoneNumber"),
                     Email = reader.GetString("email"),
@@ -113,7 +202,7 @@ namespace spring_hero_bank_cSharp_assignment.Model
             cnn.Open();
             try
             {
-                var stringCmd = $"SELECT userName FROM accounts WHERE userName = '{username}'";
+                var stringCmd = $"SELECT userName FROM accounts WHERE username = '{username}'";
                 //Console.WriteLine(cmdQuery);
                 var cmd = new MySqlCommand(
                     stringCmd, cnn);
@@ -148,7 +237,8 @@ namespace spring_hero_bank_cSharp_assignment.Model
             try
             {
                 var cmd = new MySqlCommand(
-                    $"insert into accounts values('{newAccount.AccountNumber}','{newAccount.PhoneNumber}','{newAccount.FullName}','{newAccount.Email}','{newAccount.Username}','{newAccount.PasswordHash}','{newAccount.Salt}','{newAccount.Balance}','{newAccount.Status}','{newAccount.Role}')",
+                    $"insert into accounts values('{newAccount.AccountNumber}','{newAccount.PhoneNumber}','{newAccount.FullName}','{newAccount.Email}'," +
+                    $"'{newAccount.Username}','{newAccount.PasswordHash}','{newAccount.Salt}','{newAccount.Balance}','{newAccount.Status}','{newAccount.Role}')",
                     cnn);
                 cmd.ExecuteNonQuery();
             }

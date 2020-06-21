@@ -3,15 +3,13 @@ using System.Collections.Generic;
 using spring_hero_bank_cSharp_assignment.Controller;
 using spring_hero_bank_cSharp_assignment.Entity;
 using spring_hero_bank_cSharp_assignment.Helper;
+using spring_hero_bank_cSharp_assignment.Model;
 
 namespace spring_hero_bank_cSharp_assignment.View
 {
     public class ConsoleView
     {
         private static Account _currentLogin;
-        public bool LoginSuccess { get; set; } //for test
-        public bool IsAdmin { get; set; } //for test
-
         private AccountController _accountController = new AccountController();
 
         public void GenerateMainMenu()
@@ -31,8 +29,6 @@ namespace spring_hero_bank_cSharp_assignment.View
                         Console.WriteLine("Đăng ký tài khoản");
                         Console.WriteLine(
                             "---------------------------------------------------------------------------------");
-                        _accountController.Register();
-                        //goi controller -> de navigate user
                         break;
                     case 2:
                         Console.WriteLine("Đăng nhập hệ thống");
@@ -111,16 +107,19 @@ namespace spring_hero_bank_cSharp_assignment.View
                         Console.WriteLine("Tìm kiếm người dùng theo tên");
                         Console.WriteLine(
                             "---------------------------------------------------------------------------------");
+                        _accountController.SearchAccountByName();
                         break;
                     case 4:
                         Console.WriteLine(" Tìm kiếm người dùng theo số tài khoản");
                         Console.WriteLine(
                             "---------------------------------------------------------------------------------");
+                        _accountController.SearchAccountByAccountNumber();
                         break;
                     case 5:
                         Console.WriteLine("Tìm kiếm người dùng theo số điện thoại");
                         Console.WriteLine(
                             "---------------------------------------------------------------------------------");
+                        _accountController.SearchAccountByPhoneNumber();
                         break;
                     case 6:
                         Console.WriteLine(" Thêm người dùng mới");

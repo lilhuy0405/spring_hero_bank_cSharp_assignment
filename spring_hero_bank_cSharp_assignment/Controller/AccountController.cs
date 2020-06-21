@@ -33,48 +33,61 @@ namespace spring_hero_bank_cSharp_assignment.Controller
             return null;
         }
 
-        // 1. Danh sách người dùng // hàm này cần return về 1 list chứ k p là in ra list
-        //TODO: refactor this -> public list<Account> GetListAccount()
-        public List<Account> ListAccount()
+        // 1. Danh sách người dùng
+        public void ListAccount()
         {
-            Console.WriteLine("Danh sách người dùng: ");
             foreach (var account in _accountModel.GetListAccount())
             {
                 Console.WriteLine(account.ToString());
             }
-
-            return ListAccount();
         }
 
         // 2. Danh sách lịch sử giao dịch
-        //TODO: refactor -> public list<SHbTransaction> getListTranSaction
-        public List<SHBTransaction> ListTransaction()
+        public void ListTransaction()
         {
-            Console.WriteLine("Danh sách lịch sử giao dịch: ");
             foreach (var transaction in _accountModel.GetListTransaction())
             {
                 Console.WriteLine(transaction.ToString());
             }
-
-            return ListTransaction();
         }
 
         // 3. Tìm kiếm người dùng theo tên.
-        public void SearchAccountByName()
+        public Account SearchAccountByName()
         {
             Console.WriteLine("Tìm kiếm người dùng theo tên: ");
+            var fullName = Console.ReadLine();
+            var account = _accountModel.GetAccountByName(fullName);
+            if (account == _accountModel.GetAccountByName(account.FullName))
+            {
+                return account;
+            }
+            return null;
         }
 
         // 4. Tìm kiếm người dùng theo số tài khoản.
-        public void SearchAccountByAccountNumber()
+        public Account SearchAccountByAccountNumber()
         {
             Console.WriteLine("Tìm kiếm người dùng theo số tài khoản: ");
+            var accountNumber = Console.ReadLine();
+            var account = _accountModel.GetAccountByName(accountNumber);
+            if (account == _accountModel.GetAccountByAccountNumber(account.AccountNumber))
+            {
+                return account;
+            }
+            return null;
         }
 
         // 5. Tìm kiếm người dùng theo số điện thoại
-        public void SearchAccountByPhone()
+        public Account SearchAccountByPhoneNumber()
         {
             Console.WriteLine("Tìm kiếm người dùng theo số điện thoại: ");
+            var phoneNumber = Console.ReadLine();
+            var account = _accountModel.GetAccountByName(phoneNumber);
+            if (account == _accountModel.GetAccountByPhoneNumber(account.PhoneNumber))
+            {
+                return account;
+            }
+            return null;
         }
 
         // 6. Thêm người dùng mới
