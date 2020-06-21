@@ -17,6 +17,7 @@ namespace spring_hero_bank_cSharp_assignment.Model
                 var cnn = ConnectionHelper.GetConnection();
                 cnn.Open();
                 var cmd = new MySqlCommand("select * from accounts", cnn);
+                cmd.ExecuteNonQuery();
                 cnn.Close();
                 return listAccount;
             }
@@ -36,6 +37,7 @@ namespace spring_hero_bank_cSharp_assignment.Model
                 var cnn = ConnectionHelper.GetConnection();
                 cnn.Open();
                 var cmd = new MySqlCommand("select * from shb-transactions", cnn);
+                cmd.ExecuteNonQuery();
                 cnn.Close();
                 return listTransaction;
             }
@@ -418,7 +420,7 @@ namespace spring_hero_bank_cSharp_assignment.Model
                 //lưu transaction pending vào database
                 // var check= _shbTransactionModel.InsertNewShbTransaction(shbTransaction);
                 string insertShbTransactionStringCmd =
-                    $"INSERT INTO `shb-transactions` VAlUES ('{shbTransaction.Code}','{shbTransaction.SenderAccountNumber}','{shbTransaction.ReceiverAccountNumber}','{shbTransaction.Message}',{shbTransaction.Amount},{shbTransaction.Fee},'{shbTransaction.CreateAt:yyyy-MM-dd hh:mm:ss}','{shbTransaction.UpdateAt:yyyy-MM-dd hh:mm:ss}',{(int) shbTransaction.Status},{(int) shbTransaction.Type}) ";
+                    $"INSERT INTO `shb-transactions` VALUES ('{shbTransaction.Code}','{shbTransaction.SenderAccountNumber}','{shbTransaction.ReceiverAccountNumber}','{shbTransaction.Message}',{shbTransaction.Amount},{shbTransaction.Fee},'{shbTransaction.CreateAt:yyyy-MM-dd hh:mm:ss}','{shbTransaction.UpdateAt:yyyy-MM-dd hh:mm:ss}',{(int) shbTransaction.Status},{(int) shbTransaction.Type}) ";
                 var insertShbTransactionCmd = new MySqlCommand(insertShbTransactionStringCmd, cnn);
                 insertShbTransactionCmd.ExecuteNonQuery();
                 //update so du
