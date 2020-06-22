@@ -20,8 +20,6 @@
                 $"Số tài khoản: {AccountNumber}\n" +
                 $"Số điện thoại: {PhoneNumber}\n" +
                 $"Email: {Email}\n" +
-                $"Salt: {Salt}\n" +
-                $"PasswordHash: {PasswordHash}\n" +
                 $"Username: {Username}\n" +
                 $"Quyền truy cập: {Role}\n" +
                 $"Tình trạng: {Status}\n" +

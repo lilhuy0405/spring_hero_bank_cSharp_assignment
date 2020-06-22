@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using spring_hero_bank_cSharp_assignment.Controller;
 using spring_hero_bank_cSharp_assignment.Entity;
 using spring_hero_bank_cSharp_assignment.Helper;
@@ -9,15 +10,15 @@ namespace spring_hero_bank_cSharp_assignment.View
 {
     public class ConsoleView
     {
-        private static Account _currentLogin;
-        public bool LoginSuccess { get; set; } //for test
-        public bool IsAdmin { get; set; } //for test
+        public static Account CurrentLogin;
         private AccountController _accountController = new AccountController();
 
         public void GenerateMainMenu()
         {
+            Console.Clear();
             while (true)
             {
+                Console.Clear();
                 Console.WriteLine("-------------------------- Ngân Hàng Spring Hero Bank --------------------------");
                 Console.WriteLine("1. Đăng ký tài khoản.");
                 Console.WriteLine("2. Đăng Nhập hệ thống.");
@@ -28,24 +29,42 @@ namespace spring_hero_bank_cSharp_assignment.View
                 switch (choice)
                 {
                     case 1:
+                        Console.Clear();
                         Console.WriteLine("Đăng ký tài khoản");
                         Console.WriteLine(
                             "---------------------------------------------------------------------------------");
+                        Account newAccount = _accountController.Register();
+                        if (newAccount == null)
+                        {
+                            Console.WriteLine("Đăng ký tài khoản thất bại");
+                            PromptHelper.StopConsole("Nhấn phím bất kỳ để quay lại menu chính...");
+                            break;
+                        }
+
+                        Console.WriteLine("Bạn đã đăng ký thành công tài khoản với thông tin: ");
+                        Console.WriteLine($"Họ và tên: {newAccount.FullName}\n" +
+                                          $"Số tài khoản: {newAccount.AccountNumber}\n" +
+                                          $"Sô dư hiện tại: {newAccount.Balance}\n" +
+                                          $"Số điện thoại: {newAccount.PhoneNumber}\n" +
+                                          $"Email: {newAccount.Email}\n" +
+                                          $"Tên đăng nhập: {newAccount.Username}");
+                        PromptHelper.StopConsole("Ấn phím bất kỳ để tiếp tục....");
                         break;
                     case 2:
+                        Console.Clear();
                         Console.WriteLine("Đăng nhập hệ thống");
                         Console.WriteLine(
                             "---------------------------------------------------------------------------------");
-                        var account = _accountController.Login();
-                        if (account == null)
+                        var currentAccount = _accountController.Login();
+                        if (currentAccount == null)
                         {
-                            Console.WriteLine("Login failed!");
-                            return;
+                            Console.WriteLine("Đăng nhập thất bại");
+                            PromptHelper.StopConsole("Nhấn phím bất kỳ để quay lại menu chính...");
+                            break;
                         }
 
-                        _currentLogin = account;
-                        Console.WriteLine($"Login success! Welcome back {_currentLogin.FullName}");
-                        if (_currentLogin.Role == AccountRole.ADMIN)
+                        CurrentLogin = currentAccount;
+                        if (CurrentLogin.Role == AccountRole.ADMIN)
                         {
                             GenerateAdminMenu();
                         }
@@ -53,10 +72,11 @@ namespace spring_hero_bank_cSharp_assignment.View
                         {
                             GenerateCustomMenu();
                         }
-                        
+
                         break;
                     case 3:
                         Console.WriteLine("Thoát");
+                        Console.WriteLine("Cảm ơn quý khách đã sử dụng dịch vụ của ngân hàng SHB");
                         break;
                     default:
                         Console.WriteLine("không hợp lệ");
@@ -72,10 +92,13 @@ namespace spring_hero_bank_cSharp_assignment.View
 
         public void GenerateAdminMenu()
         {
+            Console.Clear();
             while (true)
             {
+                Console.Clear();
+
                 Console.WriteLine("-------------------------- Ngân Hàng Spring Hero Bank --------------------------");
-                Console.WriteLine("Chào mừng admin xuân hùng quay trỏ lại. Vui lòng chọn thao tác");
+                Console.WriteLine($"Chào mừng admin {CurrentLogin.FullName} quay trỏ lại. Vui lòng chọn thao tác");
                 Console.WriteLine("1. Danh sách người dùng");
                 Console.WriteLine("2. Danh sách lịch sử giao dịch.");
                 Console.WriteLine("3. Tìm kiếm người dùng theo tên.");
@@ -102,7 +125,7 @@ namespace spring_hero_bank_cSharp_assignment.View
                         Console.WriteLine("Danh sách lịch sử giao dịch");
                         Console.WriteLine(
                             "---------------------------------------------------------------------------------");
-                        _accountController.ListTransaction();
+
                         break;
                     case 3:
                         Console.WriteLine("Tìm kiếm người dùng theo tên");
@@ -142,12 +165,12 @@ namespace spring_hero_bank_cSharp_assignment.View
                             case 1:
                                 Console.WriteLine("khóa tài khoản");
                                 _accountController.LockAccount();
-                                PromptHelper.StopConsole();
+                                PromptHelper.StopConsole("Nhấn phím bất kỳ để tiếp tục...");
                                 break;
                             case 2:
                                 Console.WriteLine("Mở khóa tài khoản");
                                 _accountController.UnLockAccount();
-                                PromptHelper.StopConsole();
+                                PromptHelper.StopConsole("Nhấn phím bất kỳ để tiếp tục...");
                                 break;
                             case 3:
                                 Console.WriteLine("quay lại menu chính");
@@ -159,7 +182,9 @@ namespace spring_hero_bank_cSharp_assignment.View
                         Console.WriteLine("Tìm kiếm lịch sử giao dịch theo số tài khoản");
                         Console.WriteLine(
                             "---------------------------------------------------------------------------------");
-                        var listTransactions = _accountController.GetTransactionsByAccountNumber();
+                        Console.WriteLine("Nhập số tài khoản bạn muốn tìm kiếm lịch sử giao dịch: ");
+                        var accountNumber = Console.ReadLine();
+                        var listTransactions = _accountController.GetTransactionsByAccountNumber(accountNumber);
                         List<string> listPage = new List<string>();
 
                         if (listTransactions.Count == 0)
@@ -172,10 +197,9 @@ namespace spring_hero_bank_cSharp_assignment.View
                         {
                             listPage.Add(transaction.ToString());
                         }
-
-                        Console.WriteLine($"Đã tìm thấy {listTransactions.Count} lịch sử giao dịch");
+                        
                         GeneratePageView(listPage);
-                        PromptHelper.StopConsole();
+                        PromptHelper.StopConsole("Nhấn phím bất kỳ để tiếp tục...");
                         break;
                     case 9:
                         Console.WriteLine("Thay đổi thông tin tài khoản");
@@ -216,14 +240,22 @@ namespace spring_hero_bank_cSharp_assignment.View
                         Console.WriteLine(" Thay đổi thông tin mật khẩu");
                         Console.WriteLine(
                             "---------------------------------------------------------------------------------");
+                        if (_accountController.UpdatePassWord(CurrentLogin.AccountNumber) == false)
+                        {
+                            Console.WriteLine("Câp nhật mật khẩu thất bại...");
+                            Console.WriteLine("Phiên đăng nhập đã hết hạn...");
+                            PromptHelper.StopConsole("Bấm phím bất kỳ để quay lại menu chính...");
+                            break;
+                        }
+
+                        Console.WriteLine("mời bạn đăng nhập lại...");
+                        PromptHelper.StopConsole("Bấm phím bất kỳ để tiếp tục....");
                         break;
                     case 11:
                         Console.WriteLine("Thoát");
                         Console.WriteLine(
                             "---------------------------------------------------------------------------------");
                         break;
-                    // default:
-                    //     break;
                 }
 
                 if (choice == 11)
@@ -235,10 +267,12 @@ namespace spring_hero_bank_cSharp_assignment.View
 
         public void GenerateCustomMenu()
         {
+            Console.Clear();
             while (true)
             {
+                Console.Clear();
                 Console.WriteLine("-------------------------- Ngân Hàng Spring Hero Bank --------------------------");
-                Console.WriteLine("Chào mừng xuân hùng quay trỏ lại. Vui lòng chọn thao tác");
+                Console.WriteLine($"Chào mừng {CurrentLogin.FullName} quay trỏ lại. Vui lòng chọn thao tác");
                 Console.WriteLine("1. Gửi tiền");
                 Console.WriteLine("2. Rút tiền");
                 Console.WriteLine("3. Chuyển khoản");
@@ -253,51 +287,145 @@ namespace spring_hero_bank_cSharp_assignment.View
                 switch (choice)
                 {
                     case 1:
+                        Console.Clear();
                         Console.WriteLine("Gửi tiền");
                         Console.WriteLine(
                             "---------------------------------------------------------------------------------");
+                        if (_accountController.Deposit(CurrentLogin.AccountNumber) == false)
+                        {
+                            Console.WriteLine("Có lỗi xảy ra trong quá trình gửi tiền xin hãy thử lại");
+                            PromptHelper.StopConsole("Nhấn phím bất kỳ để quay lại menu....");
+                            break;
+                        }
 
+                        Console.WriteLine("thao tác thành công");
+                        PromptHelper.StopConsole("Nhấn phím bất kỳ để tiếp tục...");
                         break;
                     case 2:
+                        Console.Clear();
                         Console.WriteLine("Rút tiền");
                         Console.WriteLine(
                             "---------------------------------------------------------------------------------");
+                        if (_accountController.WithDraw(CurrentLogin.AccountNumber) == false)
+                        {
+                            Console.WriteLine("Có lỗi xảy ra trong quá trình rút tiền xin hãy thử lại");
+                            PromptHelper.StopConsole("Nhấn phím bất kỳ để quay lại menu....");
+                            break;
+                        }
+
+                        Console.WriteLine("thao tác thành công");
+                        PromptHelper.StopConsole("Nhấn phím bất kỳ để tiếp tục...");
                         break;
                     case 3:
+                        Console.Clear();
                         Console.WriteLine("Chuyển khoản");
                         Console.WriteLine(
                             "---------------------------------------------------------------------------------");
+                        if (_accountController.Transfer(CurrentLogin.AccountNumber) == false)
+                        {
+                            Console.WriteLine("đã xảy ra lỗi xin hãy thử lại");
+                            PromptHelper.StopConsole("Nhấn phím bất kỳ để quay lại menu....");
+                            break;
+                        }
+
+                        Console.WriteLine("thao tác thành công");
+                        PromptHelper.StopConsole("Nhấn phím bất kỳ để tiếp tục...");
                         break;
                     case 4:
+                        Console.Clear();
                         Console.WriteLine("Truy vấn số dư");
                         Console.WriteLine(
                             "---------------------------------------------------------------------------------");
+                        var balance = _accountController.GetBalance(CurrentLogin.AccountNumber);
+                        if (balance > -1)
+                        {
+                            Console.WriteLine("Số dư của tài khoản: " + balance);
+                        }
+
+                        PromptHelper.StopConsole("Ấn Phím bất kỳ để tiếp tục...");
                         break;
                     case 5:
+                        Console.Clear();
                         Console.WriteLine("Thay đổi thông tin cá nhân");
                         Console.WriteLine(
                             "---------------------------------------------------------------------------------");
+                        while (true)
+                        {
+                            Console.WriteLine("Lựa chọn thông tin muốn thay đổi: ");
+                            Console.WriteLine("1. Thay đổi tên đầy đủ");
+                            Console.WriteLine("2. Thay đổi email");
+                            Console.WriteLine("3. Thay đổi số điện thoại");
+                            Console.WriteLine("4. Quay lại menu");
+                            var updateChoice = PromptHelper.GetUserChoice(1, 4);
+                            switch (updateChoice)
+                            {
+                                case 1:
+                                    _accountController.UpdateFullName(CurrentLogin.AccountNumber);
+                                    PromptHelper.StopConsole("Ấn phím bất kỳ để tiếp tục");
+                                    break;
+                                case 2:
+                                    _accountController.UpdateEmail(CurrentLogin.AccountNumber);
+                                    PromptHelper.StopConsole("Ấn phím bất kỳ để tiếp tục");
+                                    break;
+                                case 3:
+                                    _accountController.UpdatePhoneNumber(CurrentLogin.AccountNumber);
+                                    PromptHelper.StopConsole("Ấn phím bất kỳ để tiếp tục");
+                                    break;
+                                case 4:
+                                    break;
+                            }
+
+                            if (updateChoice == 4)
+                            {
+                                break;
+                            }
+                        }
+
                         break;
                     case 6:
+                        Console.Clear();
                         Console.WriteLine("Thay đổi thông tin mật khẩu");
                         Console.WriteLine(
                             "---------------------------------------------------------------------------------");
+                        if (_accountController.UpdatePassWord(CurrentLogin.AccountNumber) == false)
+                        {
+                            Console.WriteLine("Câp nhật mật khẩu thất bại...");
+                            Console.WriteLine("Phiên đăng nhập đã hết hạn...");
+                            PromptHelper.StopConsole("Bấm phím bất kỳ để quay lại menu chính...");
+                            break;
+                        }
+
+                        Console.WriteLine("Cập nhật mật khẩu thành công mời bạn đăng nhập lại...");
+                        PromptHelper.StopConsole("Bấm phím bất kỳ để tiếp tục....");
                         break;
                     case 7:
-                        Console.WriteLine("Truy vấn lịc sử giao dịch");
+                        Console.Clear();
+                        Console.WriteLine("Truy vấn lịch sử giao dịch");
+                        List<SHBTransaction> listTransactions =
+                            _accountController.GetTransactionsByAccountNumber(CurrentLogin.AccountNumber);
+                        if (listTransactions.Count == 0)
+                        {
+                            Console.WriteLine("Chưa có giao dịch nào được thực hiện");
+                            PromptHelper.StopConsole("Nhấn phím bất kỳ để quay lại menu....");
+                            break;
+                        }
+                        List<string> listPage = new List<string>();
+                        foreach (var shbTransaction in listTransactions)
+                        {
+                            listPage.Add(shbTransaction.ToString());
+                        }
+                        GeneratePageView(listPage);
+                        PromptHelper.StopConsole("Nhấn phím bất kỳ để tiếp tục...");
                         Console.WriteLine(
                             "---------------------------------------------------------------------------------");
                         break;
                     case 8:
                         Console.WriteLine("Thoát");
-                        Console.WriteLine(
-                            "---------------------------------------------------------------------------------");
                         break;
-                    default:
-                        break;
+          
                 } //end swtich case
 
-                if (choice == 8)
+                if (choice == 8 || choice == 6) // sau khi update mat khau -> break về main menu luôn
                 {
                     break;
                 }

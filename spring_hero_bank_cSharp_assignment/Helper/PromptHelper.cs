@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace spring_hero_bank_cSharp_assignment.Helper
 {
@@ -33,10 +34,47 @@ namespace spring_hero_bank_cSharp_assignment.Helper
             return choice;
         }
 
-        public static void StopConsole()
+        public static void StopConsole(string message)
         {
-            Console.WriteLine("Nhập phím bất kỳ để tiếp tục.....");
+            Console.WriteLine(message);
             Console.ReadKey(true);
+        }
+
+        public static string GetPassword()
+        {
+            //với mỗi ký tự nhập vào từ bàn phím 
+            //cộng chuỗi nó vào pass và hiển thì 1 dấu sao trên console
+            //nếu phim backspace dc ấn kiểm tra xem > 0 hay không nếu có write("/b /b") để di chuyển con trỏ về trước và xóa ký tự cuối của chuỗi
+            //nếu enter được ấn break loop
+
+            var pass = new StringBuilder();
+            while (true)
+            {
+                ConsoleKeyInfo key = Console.ReadKey(true);
+                // Backspace Should Not Work
+                if (key.Key != ConsoleKey.Backspace && key.Key != ConsoleKey.Enter)
+                {
+                    pass.Append(key.KeyChar);
+                    Console.Write("*");
+                }
+                else
+                {
+                    if (key.Key == ConsoleKey.Backspace && pass.Length > 0)
+                    {
+                        //xoa di 1 ky tu
+                        pass.Length--;
+                        Console.Write("\b \b");
+                    }
+                    else if (key.Key == ConsoleKey.Enter)
+                    {
+                        //newline
+                        Console.WriteLine();
+                        break;
+                    }
+                }
+            }
+
+            return pass.ToString();
         }
     }
 }

@@ -1,20 +1,21 @@
 ﻿using System;
+using System.Text;
 
 namespace spring_hero_bank_cSharp_assignment.Helper
 {
     public class AccountHelper
     {
-        public string RamdomAccountNumber()
+        private static Random _random = new Random();
+        public static string RandomAccountNumber(int length)
         {
-            var random = new Random();
-            string ramdomNumber = null;
-            int i;
-            for (i = 1; i < 11; i++)
+            
+            var randomAccountNumber = new StringBuilder();
+            for (int i = 0; i < length; i++)
             {
-                ramdomNumber += random.Next(0, 9).ToString();
+                randomAccountNumber.Append(_random.Next(0, 9).ToString());
             }
             
-            return ramdomNumber;
+            return randomAccountNumber.ToString();
         }
     }
 }
