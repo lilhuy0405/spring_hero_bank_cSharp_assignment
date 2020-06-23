@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Threading;
 using Google.Protobuf.WellKnownTypes;
 using MySql.Data.MySqlClient;
 using spring_hero_bank_cSharp_assignment.Controller;
@@ -10,15 +11,18 @@ namespace spring_hero_bank_cSharp_assignment.Model
 {
     public class AccountModel
     {
+        //TODO: COMPLETE THIS
         public List<Account> GetListAccount() // Lấy danh sách người dùng 
         {
+            var listAccount = new List<Account>();
+            var cnn = ConnectionHelper.GetConnection();
             try
             {
-                var listAccount = new List<Account>();
-                var cnn = ConnectionHelper.GetConnection();
                 cnn.Open();
                 var cmd = new MySqlCommand("select * from accounts", cnn);
-                //? Execute ?
+
+                cmd.ExecuteNonQuery();
+
                 cnn.Close();
                 return listAccount;
             }
@@ -59,7 +63,7 @@ namespace spring_hero_bank_cSharp_assignment.Model
             }
             else
             {
-               throw new Exception("Tài khoản không tồn tại");
+                throw new Exception("Tài khoản không tồn tại");
             }
 
             cnn.Close();
@@ -401,8 +405,9 @@ namespace spring_hero_bank_cSharp_assignment.Model
                     Status = TransactionStatus.PENDING
                 };
                 //lưu transaction pending vào database
+                //TODO: change sql command
                 string insertShbTransactionStringCmd =
-                    $"INSERT INTO `shb-transactions` VAlUES ('{shbTransaction.Code}','{shbTransaction.SenderAccountNumber}','{shbTransaction.ReceiverAccountNumber}','{shbTransaction.Message}',{shbTransaction.Amount},{shbTransaction.Fee},'{shbTransaction.CreateAt:yyyy-MM-dd hh:mm:ss}','{shbTransaction.UpdateAt:yyyy-MM-dd hh:mm:ss}',{(int) shbTransaction.Status},{(int) shbTransaction.Type}) ";
+                    $"INSERT INTO `shb-transactions` VALUES ('{shbTransaction.Code}','{shbTransaction.SenderAccountNumber}','{shbTransaction.ReceiverAccountNumber}','{shbTransaction.Message}',{shbTransaction.Amount},{shbTransaction.Fee},'{shbTransaction.CreateAt:yyyy-MM-dd hh:mm:ss}','{shbTransaction.UpdateAt:yyyy-MM-dd hh:mm:ss}',{(int) shbTransaction.Status},{(int) shbTransaction.Type}) ";
                 var insertShbTransactionCmd = new MySqlCommand(insertShbTransactionStringCmd, cnn);
                 insertShbTransactionCmd.ExecuteNonQuery();
                 //update so du
@@ -492,6 +497,7 @@ namespace spring_hero_bank_cSharp_assignment.Model
                     Status = TransactionStatus.PENDING
                 };
                 //lưu transaction pending vào database
+                //TODO: change sql command
                 string insertShbTransactionStringCmd =
                     $"INSERT INTO `shb-transactions` VAlUES ('{shbTransaction.Code}','{shbTransaction.SenderAccountNumber}','{shbTransaction.ReceiverAccountNumber}','{shbTransaction.Message}',{shbTransaction.Amount},{shbTransaction.Fee},'{shbTransaction.CreateAt:yyyy-MM-dd hh:mm:ss}','{shbTransaction.UpdateAt:yyyy-MM-dd hh:mm:ss}',{(int) shbTransaction.Status},{(int) shbTransaction.Type}) ";
                 var insertShbTransactionCmd = new MySqlCommand(insertShbTransactionStringCmd, cnn);
@@ -588,6 +594,7 @@ namespace spring_hero_bank_cSharp_assignment.Model
                     Status = TransactionStatus.PENDING
                 };
                 //lưu transaction pending vào database
+                //TODO: change sql cmd
                 string insertShbTransactionStringCmd =
                     $"INSERT INTO `shb-transactions` VAlUES ('{shbTransaction.Code}','{shbTransaction.SenderAccountNumber}','{shbTransaction.ReceiverAccountNumber}','{shbTransaction.Message}',{shbTransaction.Amount},{shbTransaction.Fee},'{shbTransaction.CreateAt:yyyy-MM-dd hh:mm:ss}','{shbTransaction.UpdateAt:yyyy-MM-dd hh:mm:ss}',{(int) shbTransaction.Status},{(int) shbTransaction.Type});";
                 var insertShbTransactionCmd = new MySqlCommand(insertShbTransactionStringCmd, connection);
@@ -640,7 +647,8 @@ namespace spring_hero_bank_cSharp_assignment.Model
                 var updateDoneTime = DateTime.Now;
                 string updateShbTransactionStatusCmdString =
                     $"UPDATE `shb-transactions` SET status = {(int) TransactionStatus.DONE}, updateAt = '{updateDoneTime:yyyy-MM-dd hh:mm:ss}' WHERE code = '{shbTransactionCode}'";
-                var updateShbTransactionStatusCmd = new MySqlCommand(updateShbTransactionStatusCmdString, connection);
+                var updateShbTransactionStatusCmd =
+                    new MySqlCommand(updateShbTransactionStatusCmdString, connection);
                 var transactionUpdated = updateShbTransactionStatusCmd.ExecuteNonQuery();
                 if (transactionUpdated == 0)
                 {

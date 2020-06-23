@@ -16,8 +16,7 @@ namespace spring_hero_bank_cSharp_assignment
             Console.OutputEncoding = Encoding.UTF8;
             Console.InputEncoding = Encoding.UTF8;
             new ConsoleView().GenerateMainMenu();
-
-
+            
         }
         
     }

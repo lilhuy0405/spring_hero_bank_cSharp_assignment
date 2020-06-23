@@ -9,7 +9,6 @@ namespace spring_hero_bank_cSharp_assignment.Controller
 {
     public class AccountController
     {
-      
         private PasswordHelper _passwordHelper = new PasswordHelper();
         private static AccountModel _accountModel = new AccountModel();
         private ShbTransactionModel _transactionModel = new ShbTransactionModel();
@@ -281,6 +280,7 @@ namespace spring_hero_bank_cSharp_assignment.Controller
 
                 Console.WriteLine("Số điện thoại không hợp lệ hãy nhập lại");
             }
+
             var res = _accountModel.UpdateAccountByAccountNumber(accountNumber, "phoneNumber", newPhoneNumber);
             if (res == true)
             {
@@ -345,13 +345,13 @@ namespace spring_hero_bank_cSharp_assignment.Controller
             return false;
         }
 
- 
+
         public bool UpdatePassWord(string accountNumber)
         {
             var account = _accountModel.GetAccountByAccountNumber(accountNumber);
             Console.WriteLine("Nhập mật khẩu cũ của bạn: ");
             string oldPassWord = PromptHelper.GetPassword();
-            
+
             // mã hóa pass người dùng nhập vào kèm theo muối trong database và so sánh kết quả với password đã được mã hóa trong database.
             if (account != null && _passwordHelper.ComparePassword(oldPassWord, account.Salt, account.PasswordHash))
             {
@@ -360,13 +360,20 @@ namespace spring_hero_bank_cSharp_assignment.Controller
                 {
                     Console.WriteLine("nhập mật khẩu mới");
                     newPassword = PromptHelper.GetPassword();
-                    if (ValidateHelper.IsPasswordValid(newPassword))
+                    if (!ValidateHelper.IsPasswordValid(newPassword))
+                    {
+                        Console.WriteLine("Mật khẩu không hợp lệ mời nhập lại");
+                    }
+                    else if (oldPassWord.Equals(newPassword))
+                    {
+                        Console.WriteLine("Bạn đã nhập mật khẩu cũ mời nhập lại");
+                    }
+                    else
                     {
                         break;
                     }
-
-                    Console.WriteLine("Mật khẩu không hợp lệ mời nhập lại");
                 }
+
                 //update md5hash
                 string newHashPassWord = _passwordHelper.MD5Hash(newPassword + account.Salt);
                 _accountModel.UpdateAccountByAccountNumber(accountNumber, "hashPassword", newHashPassWord);
@@ -440,11 +447,13 @@ namespace spring_hero_bank_cSharp_assignment.Controller
                 Console.WriteLine("không thể chuyển khoản cho cùng 1 số tài khoản");
                 return false;
             }
+
             var receiverAccount = _accountModel.GetAccountByAccountNumber(receiverAccountNumber);
             if (receiverAccount == null)
             {
                 return false;
             }
+
             Console.WriteLine(
                 "---------------------------------------------------------------------------------------");
             Console.WriteLine(
@@ -493,8 +502,10 @@ namespace spring_hero_bank_cSharp_assignment.Controller
 
             if (result == true)
             {
-                Console.WriteLine("Chuyển khoản thành công số dư tài khoản tại thời điểm giao dịch " + _accountModel.GetCurrentBalanceByAccountNumber(senderAccountNumber));
+                Console.WriteLine("Chuyển khoản thành công số dư tài khoản tại thời điểm giao dịch " +
+                                  _accountModel.GetCurrentBalanceByAccountNumber(senderAccountNumber));
             }
+
             return result;
         }
 
