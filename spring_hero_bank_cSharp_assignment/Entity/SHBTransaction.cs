@@ -19,14 +19,14 @@ namespace spring_hero_bank_cSharp_assignment.Entity
         public override string ToString()
         {
             return $"Mã giao dịch: {this.Code}\n" +
-                   $"số tài khoản người gửi {this.SenderAccountNumber}\n" +
-                   $"số tài khoản người nhận {this.ReceiverAccountNumber}\n" +
-                   $"phí giao dịch {this.Fee}\n" +
-                   $"Số tiền giao dịch {this.Amount}\n" +
-                   $"ngày tạo {this.CreateAt}\n" +
-                   $"ngày cập nhật {this.UpdateAt}\n" +
-                   $"loại giao dịch {this.Type}\n" +
-                   $"trạng thái giao dịch {this.Status.ToString()}";
+                   $"Số tài khoản người gửi: {this.SenderAccountNumber}\n" +
+                   $"Số tài khoản người nhận: {this.ReceiverAccountNumber}\n" +
+                   $"Phí giao dịch: {this.Fee}\n" +
+                   $"Số tiền giao dịch: {this.Amount}\n" +
+                   $"Ngày tạo: {this.CreateAt}\n" +
+                   $"Ngày cập nhật: {this.UpdateAt}\n" +
+                   $"Loại giao dịch: {this.Type}\n" +
+                   $"Trạng thái giao dịch: {this.Status.ToString()}\n";
         }
     }
 

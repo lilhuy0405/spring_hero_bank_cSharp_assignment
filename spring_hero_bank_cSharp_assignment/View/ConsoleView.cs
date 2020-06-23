@@ -58,7 +58,7 @@ namespace spring_hero_bank_cSharp_assignment.View
                         var currentAccount = _accountController.Login();
                         if (currentAccount == null)
                         {
-                            Console.WriteLine("Đăng nhập thất bại");
+                            Console.WriteLine("Đăng nhập thất bại Bạn đã nhập sai thông tin tài khoản hoặc tài khoản tạm thời bị khóa ");
                             PromptHelper.StopConsole("Nhấn phím bất kỳ để quay lại menu chính...");
                             break;
                         }
@@ -116,42 +116,145 @@ namespace spring_hero_bank_cSharp_assignment.View
                 switch (choice)
                 {
                     case 1:
+                        Console.Clear();
                         Console.WriteLine("danh sách người dùng");
                         Console.WriteLine(
                             "---------------------------------------------------------------------------------");
-                        _accountController.ListAccount();
+                        List<Account> listAccounts =  _accountController.ListAccount();
+                        if (listAccounts == null)
+                        {
+                            PromptHelper.StopConsole("Nhấn phím bất kỳ để tiếp tục...");
+                            break;
+                        }
+
+                        if (listAccounts.Count == 0)
+                        {
+                            Console.WriteLine("Không có người dùng nào");
+                            break;
+                        }
+
+                        Console.WriteLine($"đã tìm thấy {listAccounts.Count} tài khoản");
+                        PromptHelper.StopConsole("Bấm phím bất kỳ để hiển thị danh sách tài khoản...");
+                        //chuyển sang list string để lấy page view
+                        List<string> listPages = new List<string>();
+                        foreach (var account in listAccounts)
+                        {
+                            listPages.Add(account.ToString());
+                        }
+                        //generate page view
+                        GeneratePageView(listPages);
                         break;
                     case 2:
+                        Console.Clear();
                         Console.WriteLine("Danh sách lịch sử giao dịch");
                         Console.WriteLine(
                             "---------------------------------------------------------------------------------");
+                        var listAllTransactions = _accountController.GetListTransactions();
+                        if (listAllTransactions == null)
+                        {
+                            PromptHelper.StopConsole("Nhấn phím bất kỳ để quay lại menu...");
+                            break;
+                        }
+                        if (listAllTransactions.Count == 0)
+                        {
+                            Console.WriteLine("Chưa có giao dịch nào");
+                            PromptHelper.StopConsole("Nhấn phím bất kỳ để quay lại menu...");
+                            break;
+                        }
 
+                        Console.WriteLine($"Đã tìm thấy {listAllTransactions.Count} giao dịch");
+                        PromptHelper.StopConsole("Bấm phím bất kỳ để hiển thị danh sách giao dịch...");
+                        //chuyển sang list <string>
+                        List<string> listTransactionString = new List<string>();
+                        foreach (var transaction in listAllTransactions)
+                        {
+                            listTransactionString.Add(transaction.ToString());
+                        }
+                        //generate page view
+                        GeneratePageView(listTransactionString);
                         break;
                     case 3:
+                        Console.Clear();
                         Console.WriteLine("Tìm kiếm người dùng theo tên");
                         Console.WriteLine(
                             "---------------------------------------------------------------------------------");
-                        _accountController.SearchAccountByName();
+                        var searchResult = _accountController.SearchAccountByName();
+                        if (searchResult == null)
+                        {
+                            PromptHelper.StopConsole("Nhấn phím bất kỳ để quay lại menu...");
+                            break;
+                        }
+                        if (searchResult.Count == 0)
+                        {
+                            Console.WriteLine("Không có tài khoản nào khớp");
+                            PromptHelper.StopConsole("Nhấn phím bất kỳ để quay lại menu...");
+                            break;
+                        }
+                        Console.WriteLine($"Đã tìm thấy {searchResult.Count} tài khoản");
+                        PromptHelper.StopConsole("Bấm phím bất kỳ để hiển thị danh sách tài khoản...");
+                        //chuển sang list string
+                        List<string> listResultString = new List<string>();
+                        foreach (var account in searchResult)
+                        {
+                            listResultString.Add(account.ToString());
+                        }
+                        //generate page view
+                        GeneratePageView(listResultString);
                         break;
                     case 4:
+                        Console.Clear();
                         Console.WriteLine(" Tìm kiếm người dùng theo số tài khoản");
                         Console.WriteLine(
                             "---------------------------------------------------------------------------------");
-                        _accountController.SearchAccountByAccountNumber();
+                        var resultAccount = _accountController.SearchAccountByAccountNumber();
+                        if (resultAccount == null)
+                        {
+                            PromptHelper.StopConsole("Ấn phím bất kỳ để quay lại menu...");
+                            break;
+                        }
+
+                        var listAccountString = new List<string>()
+                        {
+                            resultAccount.ToString()
+                        };
+                        GeneratePageView(listAccountString);
                         break;
                     case 5:
+                        Console.Clear();
                         Console.WriteLine("Tìm kiếm người dùng theo số điện thoại");
                         Console.WriteLine(
                             "---------------------------------------------------------------------------------");
-                        _accountController.SearchAccountByPhoneNumber();
+                        var resultAccountByPhoneNumber =  _accountController.SearchAccountByPhoneNumber();
+                        if (resultAccountByPhoneNumber == null)
+                        {
+                            PromptHelper.StopConsole("Ấn phím bất kỳ để quay lại menu...");
+                            break;
+                        }
+                        var listSearchAccountByPhoneNumber = new List<string>()
+                        {
+                            resultAccountByPhoneNumber.ToString()
+                        };
+                        GeneratePageView(listSearchAccountByPhoneNumber);
                         break;
                     case 6:
+                        Console.Clear();
                         Console.WriteLine(" Thêm người dùng mới");
                         Console.WriteLine(
                             "---------------------------------------------------------------------------------");
-                        _accountController.AddUser();
+                        var newUser = _accountController.AddUser();
+                        if (newUser == null)
+                        {
+                            Console.WriteLine("Thêm người dùng thất bại ");
+                            PromptHelper.StopConsole("Ấn phím bất kỳ để tiếp tục...");
+                            break;
+                        }
+
+                        Console.WriteLine("Đã thêm thành công tài khoản: ");
+                        Console.WriteLine(newUser.ToString());
+                        PromptHelper.StopConsole("Ấn phím bất kỳ để tiếp tục...");
                         break;
                     case 7:
+                        Console.Clear();
                         Console.WriteLine("Khoá và mở tài khoản người dùng");
                         Console.WriteLine(
                             "---------------------------------------------------------------------------------");
@@ -179,29 +282,36 @@ namespace spring_hero_bank_cSharp_assignment.View
 
                         break;
                     case 8:
+                        Console.Clear();
                         Console.WriteLine("Tìm kiếm lịch sử giao dịch theo số tài khoản");
                         Console.WriteLine(
                             "---------------------------------------------------------------------------------");
                         Console.WriteLine("Nhập số tài khoản bạn muốn tìm kiếm lịch sử giao dịch: ");
                         var accountNumber = Console.ReadLine();
                         var listTransactions = _accountController.GetTransactionsByAccountNumber(accountNumber);
+                        if (listTransactions == null)
+                        {
+                            PromptHelper.StopConsole("Ấn phím bất kỳ để tiếp tục....");
+                            break;
+                        }
                         List<string> listPage = new List<string>();
-
                         if (listTransactions.Count == 0)
                         {
                             Console.WriteLine("Không có giao dịch nào được thực hiện");
+                            PromptHelper.StopConsole("Ấn phím bất kỳ để quay lại menu...");
                             break;
                         }
 
+                        Console.WriteLine($"đã tìm thấy {listTransactions.Count} giao dịch");
                         foreach (var transaction in listTransactions)
                         {
                             listPage.Add(transaction.ToString());
                         }
-                        
+                        PromptHelper.StopConsole("Ấn phím bất kỳ để hiển thị danh sách giao dịch...");
                         GeneratePageView(listPage);
-                        PromptHelper.StopConsole("Nhấn phím bất kỳ để tiếp tục...");
                         break;
                     case 9:
+                        Console.Clear();
                         Console.WriteLine("Thay đổi thông tin tài khoản");
                         Console.WriteLine(
                             "---------------------------------------------------------------------------------");
@@ -216,14 +326,17 @@ namespace spring_hero_bank_cSharp_assignment.View
                             switch (updateChoice)
                             {
                                 case 1:
-                                    _accountController.UpdateFullName("123456789");
+                                    _accountController.UpdateFullName(CurrentLogin.AccountNumber);
+                                    PromptHelper.StopConsole("Ấn phím bất kỳ để tiếp tục...");
                                     break;
                                 case 2:
-                                    _accountController.UpdateEmail("123456789");
+                                    _accountController.UpdateEmail(CurrentLogin.AccountNumber);
+                                    PromptHelper.StopConsole("Ấn phím bất kỳ để tiếp tục...");
                                     break;
                                 case 3:
                                     _accountController
-                                        .UpdatePhoneNumber("123456789"); // instance account number just for test
+                                        .UpdatePhoneNumber(CurrentLogin.AccountNumber);
+                                    PromptHelper.StopConsole("Ấn phím bất kỳ để tiếp tục...");
                                     break;
                                 case 4:
                                     break;
@@ -237,6 +350,7 @@ namespace spring_hero_bank_cSharp_assignment.View
 
                         break;
                     case 10:
+                        Console.Clear();
                         Console.WriteLine(" Thay đổi thông tin mật khẩu");
                         Console.WriteLine(
                             "---------------------------------------------------------------------------------");
@@ -252,13 +366,12 @@ namespace spring_hero_bank_cSharp_assignment.View
                         PromptHelper.StopConsole("Bấm phím bất kỳ để tiếp tục....");
                         break;
                     case 11:
+                        Console.Clear();
                         Console.WriteLine("Thoát");
-                        Console.WriteLine(
-                            "---------------------------------------------------------------------------------");
                         break;
                 }
 
-                if (choice == 11)
+                if (choice == 11 || choice == 10) // break ve main menu ngay sau khi update password hoac chon thoát
                 {
                     break;
                 }
@@ -434,11 +547,11 @@ namespace spring_hero_bank_cSharp_assignment.View
 
         public void GeneratePageView(List<string> data)
         {
+            Console.Clear();
             int currentPageIndex = 0;
             int total = data.Count;
             while (true)
             {
-                Console.Clear();
                 Console.WriteLine(
                     $"---------------------------- đang hiển thị trang {currentPageIndex + 1} trên tổng số {total} trang ----------------------------");
                 Console.WriteLine(data[currentPageIndex]);
@@ -449,6 +562,7 @@ namespace spring_hero_bank_cSharp_assignment.View
                 int charKey = keyInfo.GetHashCode(); //get ascii code of keyboard character entered
                 if (charKey == 46) // 62 is ascii code of '.' or >
                 {
+                    Console.Clear();
                     currentPageIndex++;
                     if (currentPageIndex > total - 1)
                     {
@@ -459,6 +573,7 @@ namespace spring_hero_bank_cSharp_assignment.View
 
                 if (charKey == 44) //60 is ascii code of comma ',' or <
                 {
+                    Console.Clear();
                     currentPageIndex--;
                     if (currentPageIndex < 0)
                     {

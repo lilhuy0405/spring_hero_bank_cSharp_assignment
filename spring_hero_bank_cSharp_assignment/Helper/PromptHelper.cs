@@ -46,7 +46,7 @@ namespace spring_hero_bank_cSharp_assignment.Helper
             //cộng chuỗi nó vào pass và hiển thì 1 dấu sao trên console
             //nếu phim backspace dc ấn kiểm tra xem > 0 hay không nếu có write("/b /b") để di chuyển con trỏ về trước và xóa ký tự cuối của chuỗi
             //nếu enter được ấn break loop
-
+          
             var pass = new StringBuilder();
             while (true)
             {

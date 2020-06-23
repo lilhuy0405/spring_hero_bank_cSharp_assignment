@@ -27,99 +27,171 @@ namespace spring_hero_bank_cSharp_assignment.Controller
                 Console.WriteLine("Đăng nhập thành công");
                 return account;
             }
-
-            Console.WriteLine("đăng nhập thất bại: thông tin tài khoản hoặc mật khẩu không đúng");
+            
             return null;
         }
 
-        //TODO: refactor
         // 1. Danh sách người dùng
-        public void ListAccount()
+        public List<Account> ListAccount()
         {
-            foreach (var account in _accountModel.GetListAccount())
-            {
-                Console.WriteLine(account.ToString());
-            }
+            var list = _accountModel.GetListAccount();
+            return list;
         }
 
 
         // 3. Tìm kiếm người dùng theo tên.
-        public Account SearchAccountByName()
+        public List<Account> SearchAccountByName()
         {
-            Console.WriteLine("Tìm kiếm người dùng theo tên: ");
+            Console.WriteLine("Nhập tên tài khoản muốn tìm: ");
             var fullName = Console.ReadLine();
-
-            return _accountModel.GetAccountByName(fullName);
+            return _accountModel.GetAccountsByName(fullName);
         }
 
         // 4. Tìm kiếm người dùng theo số tài khoản.
         public Account SearchAccountByAccountNumber()
         {
-            Console.WriteLine("Tìm kiếm người dùng theo số tài khoản: ");
+            Console.WriteLine("Nhập số tài khoản muốn tìm kiếm: ");
             var accountNumber = Console.ReadLine();
-            //TODO: fix this
             return _accountModel.GetAccountByAccountNumber(accountNumber);
         }
 
         // 5. Tìm kiếm người dùng theo số điện thoại
         public Account SearchAccountByPhoneNumber()
         {
-            Console.WriteLine("Tìm kiếm người dùng theo số điện thoại: ");
+            Console.WriteLine("Nhập số điện thoại muốn tìm: ");
             var phoneNumber = Console.ReadLine();
             var account = _accountModel.GetAccountByPhoneNumber(phoneNumber);
-
-            return account; //TODO: check null
+            return account;
         }
 
         // 6. Thêm người dùng mới
-        public void AddUser()
+        public Account AddUser() // cho phép thêm tài khoản khách hoặc admin
         {
-            string accountNumber;
+            var accountNumber = "";
             while (true)
             {
                 accountNumber = AccountHelper.RandomAccountNumber(15);
-                var isExist = _accountModel.CheckExistAccountByUsername(accountNumber);
-                if (isExist == false)
+                var isExist = _accountModel.CheckExistAccountNumber(accountNumber);
+                if (!isExist)
                 {
                     break;
                 }
             }
 
+            //init account obj 
             var newAccount = new Account()
             {
                 Balance = 0,
                 Status = AccountStatus.ACTIVE,
                 Salt = _passwordHelper.GenerateSalt(),
                 AccountNumber = accountNumber,
-                Role = AccountRole.GUEST
             };
-
-            Console.WriteLine("--Đăng kí--"); //tieng viet
-            Console.WriteLine("Nhập tên đăng nhập");
-            string username = Console.ReadLine();
-            while (_accountModel.CheckExistAccountByUsername(username))
+            //get Role
+            Console.WriteLine("Bạn muốn tạo tài khoản thường hay tài khoản cho admin ?");
+            Console.WriteLine("1. Tài khoản thường");
+            Console.WriteLine("2. Tài khoản admin");
+            Console.WriteLine("Chọn 1 hoặc 2");
+            var choice = PromptHelper.GetUserChoice(1, 2);
+            switch (choice)
             {
-                Console.WriteLine("Tên đăng nhập đã tồn tại vui long chon tên đăng nhập khác");
+                case 1:
+                    newAccount.Role = AccountRole.GUEST;
+                    break;
+                case 2:
+                    newAccount.Role = AccountRole.ADMIN;
+                    break;
+            }
+            //get full Name
+            Console.WriteLine("Nhập tên đầy đủ: ");
+            string fullName = Console.ReadLine();
+            newAccount.FullName = fullName;
+            //get email
+            Console.WriteLine("Nhập email: ");
+            string email;
+            while (true)
+            {
+                email = Console.ReadLine();
+                if (ValidateHelper.IsEmailValid(email))
+                {
+                    break;
+                }
+
+                Console.WriteLine("email không hợp lệ mời nhập lại");
+            }
+
+            newAccount.Email = email;
+            //get phone number
+            Console.WriteLine("Nhập số điện thoại: ");
+            string phoneNumber;
+            while (true)
+            {
+                phoneNumber = Console.ReadLine();
+                if (ValidateHelper.IsPhoneNumberValid(phoneNumber))
+                {
+                    break;
+                }
+
+                Console.WriteLine("Số điện thoại không hợp lệ mời nhập lại");
+            }
+
+            newAccount.PhoneNumber = phoneNumber;
+            //get username
+            Console.WriteLine("Nhập tên đăng nhập: ");
+            //prompt for username if exsist -> prompt again
+            string username;
+            while (true)
+            {
                 username = Console.ReadLine();
+                var isValid = ValidateHelper.IsUsernameValid(username);
+                var isExist = _accountModel.CheckExistAccountByUsername(username);
+                if (isValid && !isExist)
+                {
+                    break;
+                }
+
+                Console.WriteLine("Tên đăng nhập không hợp lệ hoặc đã tồn tại hãy nhập lại");
             }
 
             newAccount.Username = username;
+            //get password
+            Console.WriteLine("Hãy nhập vào mật khẩu:");
+            string password;
+            while (true)
+            {
+                password = PromptHelper.GetPassword();
+                if (ValidateHelper.IsPasswordValid(password))
+                {
+                    break;
+                }
 
-            Console.WriteLine("Enter password");
-            var password = Console.ReadLine();
+                Console.WriteLine("Mật khẩu không hợp lệ mời nhập lại");
+            }
 
-            newAccount.PasswordHash = _passwordHelper.MD5Hash(newAccount.Salt + password);
+            //xác nhận mật khẩu
+            Console.WriteLine("Nhập lại mật khẩu của bạn để xác nhận: ");
+            string confirmPass = "";
+            while (true)
+            {
+                confirmPass = PromptHelper.GetPassword();
+                if (confirmPass.Equals(password))
+                {
+                    break;
+                }
 
-            Console.WriteLine("Enter your full name");
-            newAccount.FullName = Console.ReadLine();
+                Console.WriteLine("Mật khẩu không khớp, mời nhập lại");
+            }
 
-            Console.WriteLine("Enter your email");
-            newAccount.Email = Console.ReadLine();
 
-            Console.WriteLine("Enter your phone number");
-            newAccount.PhoneNumber = Console.ReadLine();
+            //hash pwd and salt to get password hashed
+            newAccount.PasswordHash = _passwordHelper.MD5Hash(password + newAccount.Salt);
 
-            _accountModel.SaveAccount(newAccount);
+            var result = _accountModel.SaveAccount(newAccount);
+            if (result == false)
+            {
+                return null;
+            }
+
+            return newAccount;
         }
 
         // 7. Khoá và mở tài khoản người dùng
@@ -251,6 +323,21 @@ namespace spring_hero_bank_cSharp_assignment.Controller
                 Console.WriteLine("Mật khẩu không hợp lệ mời nhập lại");
             }
 
+            //xác nhận mật khẩu
+            Console.WriteLine("Nhập lại mật khẩu của bạn để xác nhận: ");
+            string confirmPass = "";
+            while (true)
+            {
+                confirmPass = PromptHelper.GetPassword();
+                if (confirmPass.Equals(password))
+                {
+                    break;
+                }
+
+                Console.WriteLine("Mật khẩu không khớp, mời nhập lại");
+            }
+
+
             //hash pwd and salt to get password hashed
             newAccount.PasswordHash = _passwordHelper.MD5Hash(password + newAccount.Salt);
 
@@ -259,10 +346,8 @@ namespace spring_hero_bank_cSharp_assignment.Controller
             {
                 return null;
             }
-            else
-            {
-                return newAccount;
-            }
+
+            return newAccount;
         }
 
         public bool UpdatePhoneNumber(string accountNumber)
@@ -374,6 +459,20 @@ namespace spring_hero_bank_cSharp_assignment.Controller
                     }
                 }
 
+                //confirm new password
+                Console.WriteLine("Hãy nhập lại mật khẩu để xác nhận");
+                string confirmNewPassword = "";
+                while (true)
+                {
+                    confirmNewPassword = PromptHelper.GetPassword();
+                    if (confirmNewPassword.Equals(newPassword))
+                    {
+                        break;
+                    }
+
+                    Console.WriteLine("Mật khẩu không khớp, hãy nhập lại");
+                }
+
                 //update md5hash
                 string newHashPassWord = _passwordHelper.MD5Hash(newPassword + account.Salt);
                 _accountModel.UpdateAccountByAccountNumber(accountNumber, "hashPassword", newHashPassWord);
@@ -381,7 +480,7 @@ namespace spring_hero_bank_cSharp_assignment.Controller
                 return true;
             }
 
-            Console.WriteLine("Bạn đã nhập sai mật khẩu hãy thử lại");
+            Console.WriteLine("Bạn đã nhập sai mật khẩu");
             return false;
         }
 
@@ -512,6 +611,14 @@ namespace spring_hero_bank_cSharp_assignment.Controller
         public double GetBalance(string accountNumber)
         {
             return _accountModel.GetCurrentBalanceByAccountNumber(accountNumber);
+        }
+
+        public List<SHBTransaction> GetListTransactions()
+        {
+            var listTransactions = _transactionModel.GetListTransactions();
+            var size = listTransactions.Count;
+
+            return listTransactions;
         }
     }
 }

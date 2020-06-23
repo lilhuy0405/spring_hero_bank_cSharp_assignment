@@ -11,7 +11,6 @@ namespace spring_hero_bank_cSharp_assignment.Model
 {
     public class AccountModel
     {
-        //TODO: COMPLETE THIS
         public List<Account> GetListAccount() // Lấy danh sách người dùng 
         {
             var listAccount = new List<Account>();
@@ -19,55 +18,77 @@ namespace spring_hero_bank_cSharp_assignment.Model
             try
             {
                 cnn.Open();
-                var cmd = new MySqlCommand("select * from accounts", cnn);
+                var selectAccountsStringCmd = "SELECT * FROM accounts";
+                var selectAccountsSqlCmd = new MySqlCommand(selectAccountsStringCmd, cnn);
+                var accountReader = selectAccountsSqlCmd.ExecuteReader();
+                while (accountReader.Read())
+                {
+                    var account = new Account()
+                    {
+                        FullName = accountReader.GetString("fullName"),
+                        AccountNumber = accountReader.GetString("accountNumber"),
+                        PhoneNumber = accountReader.GetString("phoneNumber"),
+                        Email = accountReader.GetString("email"),
+                        Salt = accountReader.GetString("salt"),
+                        PasswordHash = accountReader.GetString("hashPassword"),
+                        Username = accountReader.GetString("username"),
+                        Role = (AccountRole) accountReader.GetInt32("role"),
+                        Status = (AccountStatus) accountReader.GetInt32("status"),
+                        Balance = accountReader.GetDouble("balance")
+                    };
+                    listAccount.Add(account);
+                }
 
-                cmd.ExecuteNonQuery();
-
+                accountReader.Close();
                 cnn.Close();
                 return listAccount;
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine("Lấy danh sách tài khoản thất bại, " + e.Message);
+                cnn.Close();
+                return null;
             }
-
-            return null;
         }
-
-
-        //TODO: add try catch
-        public Account GetAccountByName(string fullName) // Tìm kiếm người dùng theo tên
+        
+        public List<Account> GetAccountsByName(string fullName) // Tìm kiếm người dùng theo tên
         {
-            Account account = null;
-            var cnn = ConnectionHelper.GetConnection();
-            cnn.Open();
-            var cmd = new MySqlCommand(
-                $"select * from accounts where fullName = '{fullName}'",
-                cnn);
-            var reader = cmd.ExecuteReader();
-            if (reader.Read())
+            var listAccount = new List<Account>();
+            var connection = ConnectionHelper.GetConnection();
+            try
             {
-                account = new Account()
+                connection.Open();
+                string stringCmd = $"SELECT * FROM accounts WHERE fullName = '{fullName}'";
+                var sqlCmd = new MySqlCommand(stringCmd, connection);
+                var accountReader = sqlCmd.ExecuteReader();
+                while (accountReader.Read())
                 {
-                    FullName = reader.GetString("fullName"),
-                    AccountNumber = reader.GetString("accountNumber"),
-                    PhoneNumber = reader.GetString("phoneNumber"),
-                    Email = reader.GetString("email"),
-                    Salt = reader.GetString("salt"),
-                    PasswordHash = reader.GetString("hashPassword"),
-                    Username = reader.GetString("username"),
-                    Role = (AccountRole) reader.GetInt32("role"),
-                    Status = (AccountStatus) reader.GetInt32("status"),
-                    Balance = reader.GetDouble("balance")
-                };
-            }
-            else
-            {
-                throw new Exception("Tài khoản không tồn tại");
-            }
+                    var account = new Account()
+                    {
+                        FullName = accountReader.GetString("fullName"),
+                        AccountNumber = accountReader.GetString("accountNumber"),
+                        PhoneNumber = accountReader.GetString("phoneNumber"),
+                        Email = accountReader.GetString("email"),
+                        Salt = accountReader.GetString("salt"),
+                        PasswordHash = accountReader.GetString("hashPassword"),
+                        Username = accountReader.GetString("username"),
+                        Role = (AccountRole) accountReader.GetInt32("role"),
+                        Status = (AccountStatus) accountReader.GetInt32("status"),
+                        Balance = accountReader.GetDouble("balance")
+                    };
+                    listAccount.Add(account);
+                }
 
-            cnn.Close();
-            return account;
+                accountReader.Close();
+                connection.Close();
+                return listAccount;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Tìm tài khoản thất bại, " + e.Message);
+                connection.Close();
+                return null;
+            }
         }
 
 
@@ -75,11 +96,12 @@ namespace spring_hero_bank_cSharp_assignment.Model
         {
             Account account = new Account();
             var cnn = ConnectionHelper.GetConnection();
-            cnn.Open();
+
             try
             {
+                cnn.Open();
                 var cmd = new MySqlCommand(
-                    $"select * from accounts where accountNumber = '{accountNumber}' AND status = {(int) AccountStatus.ACTIVE}",
+                    $"select * from accounts where accountNumber = '{accountNumber}';",
                     cnn);
                 var reader = cmd.ExecuteReader();
                 if (reader.Read())
@@ -106,7 +128,7 @@ namespace spring_hero_bank_cSharp_assignment.Model
             }
             catch (Exception e)
             {
-                Console.WriteLine("Lỗi khi truy vấn database " + e.Message);
+                Console.WriteLine("Tìm tài khoản thất bại, " + e.Message);
                 cnn.Close();
                 return null;
             }
@@ -117,9 +139,10 @@ namespace spring_hero_bank_cSharp_assignment.Model
         {
             Account account = new Account();
             var cnn = ConnectionHelper.GetConnection();
-            cnn.Open();
+
             try
             {
+                cnn.Open();
                 var cmd = new MySqlCommand(
                     $"select * from accounts where phoneNumber = '{phoneNumber}'",
                     cnn);
@@ -148,7 +171,7 @@ namespace spring_hero_bank_cSharp_assignment.Model
             }
             catch (Exception e)
             {
-                Console.WriteLine("Truy vấn database thất bại " + e.Message);
+                Console.WriteLine("Tìm tài khoản thất bại, " + e.Message);
                 cnn.Close();
                 return null;
             }
@@ -187,9 +210,10 @@ namespace spring_hero_bank_cSharp_assignment.Model
         {
             Account account = new Account();
             var cnn = ConnectionHelper.GetConnection();
-            cnn.Open();
+
             try
             {
+                cnn.Open();
                 var cmd = new MySqlCommand(
                     $"select * from accounts where username = '{username}' and status = {(int) AccountStatus.ACTIVE}",
                     cnn);
@@ -209,7 +233,7 @@ namespace spring_hero_bank_cSharp_assignment.Model
                 }
                 else
                 {
-                    throw new Exception("tài khoản không tồn tại");
+                    throw new Exception("tài khoản không tồn tại hoặc đã bị khóa");
                 }
 
                 reader.Close();
@@ -218,7 +242,7 @@ namespace spring_hero_bank_cSharp_assignment.Model
             }
             catch (Exception e)
             {
-                Console.WriteLine("truy vấn database thất bại lỗi " + e.Message);
+                Console.WriteLine("Lấy thông tin tài khoản thất bại " + e.Message);
                 cnn.Close();
                 return null;
             }
@@ -228,9 +252,10 @@ namespace spring_hero_bank_cSharp_assignment.Model
         {
             var cnn = ConnectionHelper.GetConnection();
             bool result = false;
-            cnn.Open();
+
             try
             {
+                cnn.Open();
                 var stringCmd = $"SELECT userName FROM accounts WHERE username = '{username}'";
                 //Console.WriteLine(cmdQuery);
                 var cmd = new MySqlCommand(
@@ -285,9 +310,10 @@ namespace spring_hero_bank_cSharp_assignment.Model
         {
             var cnn = ConnectionHelper.GetConnection();
 
-            cnn.Open();
+
             try
             {
+                cnn.Open();
                 string insertAccountStringCmd =
                     $"INSERT INTO `accounts`(`accountNumber`, `phoneNumber`, `fullName`, `email`, `username`, " +
                     $"`hashPassword`, `salt`, `balance`, `status`, `role`) " +
@@ -301,7 +327,7 @@ namespace spring_hero_bank_cSharp_assignment.Model
             }
             catch (Exception e)
             {
-                Console.WriteLine("Lưu người dùng thất bại lỗi " + e.Message);
+                Console.WriteLine("Lưu người dùng thất bại," + e.Message);
                 cnn.Close();
                 return false;
             }
@@ -337,9 +363,10 @@ namespace spring_hero_bank_cSharp_assignment.Model
         {
             double currentBalance;
             var cnn = ConnectionHelper.GetConnection();
-            cnn.Open();
+
             try
             {
+                cnn.Open();
                 var stringCmdGetAccount =
                     $"select balance from `accounts` where accountNumber = '{accountNumber}' and status = {(int) AccountStatus.ACTIVE}";
                 var cmdGetAccount = new MySqlCommand(stringCmdGetAccount, cnn);
@@ -371,7 +398,6 @@ namespace spring_hero_bank_cSharp_assignment.Model
         {
             var minBalance = 50000;
             var cnn = ConnectionHelper.GetConnection();
-
 
             cnn.Open();
             var transaction = cnn.BeginTransaction();
