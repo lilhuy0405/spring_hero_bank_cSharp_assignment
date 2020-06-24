@@ -271,7 +271,7 @@ namespace spring_hero_bank_cSharp_assignment.Model
             }
             catch (Exception e)
             {
-                Console.WriteLine("Truy vấn database thất bại lỗi " + e.Message);
+                Console.WriteLine("Kiểm tra tài khoản thất bại " + e.Message);
             }
             finally
             {
@@ -299,7 +299,7 @@ namespace spring_hero_bank_cSharp_assignment.Model
             }
             catch (Exception e)
             {
-                Console.WriteLine("Lỗi khi truy vấn database " + e.Message);
+                Console.WriteLine("Kiểm tra tài khoản theo số tài khoản thất bại " + e.Message);
                 return false;
             }
 
@@ -382,7 +382,7 @@ namespace spring_hero_bank_cSharp_assignment.Model
             }
             catch (Exception e)
             {
-                Console.WriteLine("Lỗi khi truy vấn database " + e.Message);
+                Console.WriteLine("Lấy số dư thất bại, " + e.Message);
                 currentBalance = -1;
             }
             finally
