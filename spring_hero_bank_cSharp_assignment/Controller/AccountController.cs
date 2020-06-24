@@ -486,18 +486,8 @@ namespace spring_hero_bank_cSharp_assignment.Controller
 
         public bool Deposit(string accountNumber)
         {
-            Console.WriteLine("Nhập số tiền bạn muốn gửi: ");
-            double amount;
-            while (true)
-            {
-                amount = double.Parse(Console.ReadLine());
-                if (amount > 0)
-                {
-                    break;
-                }
-
-                Console.WriteLine("số tiền không họp lệ mời nhập lại");
-            }
+            Console.WriteLine("Nhập số tiền muốn gửi: ");
+            var amount = PromptHelper.GetAmount();
 
             if (_accountModel.Deposit(accountNumber, amount))
             {
@@ -513,17 +503,7 @@ namespace spring_hero_bank_cSharp_assignment.Controller
         public bool WithDraw(string accountNumber)
         {
             Console.WriteLine("Nhập số tiền bạn muốn rút: ");
-            double amount;
-            while (true)
-            {
-                amount = double.Parse(Console.ReadLine());
-                if (amount > 0)
-                {
-                    break;
-                }
-
-                Console.WriteLine("số tiền không họp lệ mời nhập lại");
-            }
+            var amount = PromptHelper.GetAmount();
 
             if (_accountModel.Withdraw(accountNumber, amount))
             {
@@ -575,17 +555,7 @@ namespace spring_hero_bank_cSharp_assignment.Controller
             {
                 case 1:
                     Console.WriteLine("Nhập số tiền bạn muốn chuyển khoản: ");
-                    double amount;
-                    while (true)
-                    {
-                        amount = double.Parse(Console.ReadLine());
-                        if (amount > 0)
-                        {
-                            break;
-                        }
-
-                        Console.WriteLine("số tiền không họp lệ mời nhập lại");
-                    }
+                    var amount = PromptHelper.GetAmount();
 
                     result = _accountModel.Transfer(senderAccountNumber, receiverAccountNumber, amount);
                     break;

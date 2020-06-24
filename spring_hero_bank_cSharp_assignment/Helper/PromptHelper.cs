@@ -76,5 +76,33 @@ namespace spring_hero_bank_cSharp_assignment.Helper
 
             return pass.ToString();
         }
+
+        public static double GetAmount()
+        {
+            double amount = -1;
+            while (true)
+            {
+                try
+                {
+                    amount = double.Parse(Console.ReadLine());
+                
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Giá trị không hợp lệ mời nhập lại");
+                    amount = -1;
+                    continue;
+                }
+
+                if (amount > 0)
+                {
+                    break;
+                }
+
+                Console.WriteLine("Số tiền phải lớn hơn 0 mời nhập lại...");
+            }
+
+            return amount;
+        }
     }
 }
