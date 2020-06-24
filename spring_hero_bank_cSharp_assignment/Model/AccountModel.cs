@@ -442,7 +442,7 @@ namespace spring_hero_bank_cSharp_assignment.Model
                 //new so du khong hop le thi commit 1 failed transaction vao database
                 if (currentBalence < minBalance)
                 {
-                    var updateTime = new DateTime();
+                    var updateTime = DateTime.Now;
                     var updateTransactionFailStringCmd =
                         $"UPDATE `shb-transactions` SET status =' {(int) TransactionStatus.FAILED}', updateAt = '{updateTime:yyyy-MM-dd hh:mm:ss}' WHERE code = '{shbTransactionCode}'";
                     var updateTransactionFailCmd = new MySqlCommand(updateTransactionFailStringCmd, cnn);
@@ -631,7 +631,7 @@ namespace spring_hero_bank_cSharp_assignment.Model
                 if (senderBalance < minBalance)
                 {
                     //update transaction status to failed -> commit dabatabase -> return false 
-                    var updateTime = new DateTime();
+                    var updateTime = DateTime.Now;
                     var updateTransactionFailStringCmd =
                         $"UPDATE `shb-transactions` SET status =' {(int) TransactionStatus.FAILED}', updateAt = '{updateTime:yyyy-MM-dd hh:mm:ss}' WHERE code = '{shbTransactionCode}'";
                     var updateTransactionFailCmd = new MySqlCommand(updateTransactionFailStringCmd, connection);
