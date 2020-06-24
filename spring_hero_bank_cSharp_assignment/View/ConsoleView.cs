@@ -58,7 +58,7 @@ namespace spring_hero_bank_cSharp_assignment.View
                         var currentAccount = _accountController.Login();
                         if (currentAccount == null)
                         {
-                            Console.WriteLine("Đăng nhập thất bại Bạn đã nhập sai thông tin tài khoản hoặc tài khoản tạm thời bị khóa ");
+                            Console.WriteLine("Đăng nhập thất bại");
                             PromptHelper.StopConsole("Nhấn phím bất kỳ để quay lại menu chính...");
                             break;
                         }
@@ -238,7 +238,7 @@ namespace spring_hero_bank_cSharp_assignment.View
                         break;
                     case 6:
                         Console.Clear();
-                        Console.WriteLine(" Thêm người dùng mới");
+                        Console.WriteLine("Thêm người dùng mới");
                         Console.WriteLine(
                             "---------------------------------------------------------------------------------");
                         var newUser = _accountController.AddUser();
@@ -317,6 +317,7 @@ namespace spring_hero_bank_cSharp_assignment.View
                             "---------------------------------------------------------------------------------");
                         while (true)
                         {
+                            Console.Clear();
                             Console.WriteLine("Lựa chọn thông tin muốn thay đổi: ");
                             Console.WriteLine("1. Thay đổi tên đầy đủ");
                             Console.WriteLine("2. Thay đổi email");
@@ -326,14 +327,17 @@ namespace spring_hero_bank_cSharp_assignment.View
                             switch (updateChoice)
                             {
                                 case 1:
+                                    Console.Clear();
                                     _accountController.UpdateFullName(CurrentLogin.AccountNumber);
                                     PromptHelper.StopConsole("Ấn phím bất kỳ để tiếp tục...");
                                     break;
                                 case 2:
+                                    Console.Clear();
                                     _accountController.UpdateEmail(CurrentLogin.AccountNumber);
                                     PromptHelper.StopConsole("Ấn phím bất kỳ để tiếp tục...");
                                     break;
                                 case 3:
+                                    Console.Clear();
                                     _accountController
                                         .UpdatePhoneNumber(CurrentLogin.AccountNumber);
                                     PromptHelper.StopConsole("Ấn phím bất kỳ để tiếp tục...");
