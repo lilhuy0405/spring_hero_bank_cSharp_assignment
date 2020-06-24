@@ -9,9 +9,10 @@ namespace spring_hero_bank_cSharp_assignment.Helper
         {
             //get from: https://www.regexpal.com/93886
             //địa chỉ email phải bắt đầu bằng 1 ký tự
-            //địa chỉ email là tập hợp của các ký tự a-z, 0-9 và có thể có các ký tự như dấu chấm, dấu gạch dưới
-            //độ dài tối thiểu của email là 5, độ dài tối đa là 32 + tên miền của email có thể là tên miền cấp 1 or tên miền cấp 2
-            string emailPattern = "^[a-z][a-z0-9_\\.]{5,32}@[a-z0-9]{2,}(\\.[a-z0-9]{2,4}){1,2}$";
+            //địa chỉ email là tập hợp của các ký tự a-z, 0-9 A-Z và có thể có các ký tự như dấu chấm, dấu gạch dưới
+            //độ dài tối thiểu của email là 3, độ dài tối đa là 32
+            // tên miền của email có thể là tên miền cấp 1 or tên miền cấp 2(@gmail.com or @fpt.vnu.edu)
+            string emailPattern = "^[a-zA-z0-9_\\.]{3,32}@[a-z0-9]{2,}(\\.[a-z0-9]{2,4}){1,2}$";
             var result = Regex.IsMatch(email, emailPattern);
             return result;
         }
