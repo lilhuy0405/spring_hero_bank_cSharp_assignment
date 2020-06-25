@@ -417,7 +417,7 @@ namespace spring_hero_bank_cSharp_assignment.View
                             "---------------------------------------------------------------------------------");
                         if (_accountController.Deposit(CurrentLogin.AccountNumber) == false)
                         {
-                            Console.WriteLine("Có lỗi xảy ra trong quá trình gửi tiền xin hãy thử lại");
+                            Console.WriteLine("Gửi tiền thất bại, hãy thử lại sau !!!");
                             PromptHelper.StopConsole("Nhấn phím bất kỳ để quay lại menu....");
                             break;
                         }
@@ -432,7 +432,7 @@ namespace spring_hero_bank_cSharp_assignment.View
                             "---------------------------------------------------------------------------------");
                         if (_accountController.WithDraw(CurrentLogin.AccountNumber) == false)
                         {
-                            Console.WriteLine("Có lỗi xảy ra trong quá trình rút tiền xin hãy thử lại");
+                            Console.WriteLine("Rút tiền thất bại....");
                             PromptHelper.StopConsole("Nhấn phím bất kỳ để quay lại menu....");
                             break;
                         }
@@ -447,7 +447,7 @@ namespace spring_hero_bank_cSharp_assignment.View
                             "---------------------------------------------------------------------------------");
                         if (_accountController.Transfer(CurrentLogin.AccountNumber) == false)
                         {
-                            Console.WriteLine("đã xảy ra lỗi xin hãy thử lại");
+                            Console.WriteLine("Chuyển khoản thất bại");
                             PromptHelper.StopConsole("Nhấn phím bất kỳ để quay lại menu....");
                             break;
                         }
