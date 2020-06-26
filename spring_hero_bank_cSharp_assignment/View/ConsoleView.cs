@@ -57,6 +57,8 @@ namespace spring_hero_bank_cSharp_assignment.View
                         if (currentAccount == null)
                         {
                             Console.WriteLine("Đăng nhập không thành công");
+
+                            Console.WriteLine("Đăng nhập không thành công. Vui lòng thử lại!. ");
                             PromptHelper.StopConsole("Nhấn phím bất kỳ để quay lại menu chính...");
                             break;
                         }
@@ -66,9 +68,7 @@ namespace spring_hero_bank_cSharp_assignment.View
                         {
                             GenerateAdminMenu();
                         }
-
                         GenerateCustomMenu();
-
                         break;
                     case 3:
                         Console.WriteLine("Thoát");
