@@ -58,7 +58,7 @@ namespace spring_hero_bank_cSharp_assignment.View
                         var currentAccount = _accountController.Login();
                         if (currentAccount == null)
                         {
-                            Console.WriteLine("Đăng nhập thất bại Bạn đã nhập sai thông tin tài khoản hoặc tài khoản tạm thời bị khóa ");
+                            Console.WriteLine("Đăng nhập thất bại . Vui lòng thử lại . ");
                             PromptHelper.StopConsole("Nhấn phím bất kỳ để quay lại menu chính...");
                             break;
                         }
