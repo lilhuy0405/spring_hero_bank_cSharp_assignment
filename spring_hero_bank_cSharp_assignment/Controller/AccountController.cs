@@ -71,7 +71,13 @@ namespace spring_hero_bank_cSharp_assignment.Controller
             {
                 accountNumber = AccountHelper.RandomAccountNumber(15);
                 var isExist = _accountModel.CheckExistAccountNumber(accountNumber);
-                if (!isExist)
+                if (isExist == null)
+                {
+                    Console.WriteLine("Kiểm tra kết nối của bạn");
+                    break;
+                }
+
+                if (isExist == false)
                 {
                     break;
                 }
@@ -144,12 +150,28 @@ namespace spring_hero_bank_cSharp_assignment.Controller
                 username = Console.ReadLine();
                 var isValid = ValidateHelper.IsUsernameValid(username);
                 var isExist = _accountModel.CheckExistAccountByUsername(username);
-                if (isValid && !isExist)
+                if (isExist == null)
+                {
+                    Console.WriteLine("Hãy kiểm tra kết nối của bạn");
+                    return null;
+                }
+                if (isValid && isExist == false)
                 {
                     break;
                 }
 
-                Console.WriteLine("Tên đăng nhập không hợp lệ hoặc đã tồn tại hãy nhập lại");
+                if (!isValid)
+                {
+                    Console.WriteLine("tên đăng nhập không hợp lệ mời nhập lại");
+                    continue;
+                }
+
+                if (isExist == true)
+                {
+                    Console.WriteLine("Tên đăng nhập đã tồn tại mời nhập lại");
+                    continue;
+                }
+                
             }
 
             newAccount.Username = username;
@@ -240,7 +262,13 @@ namespace spring_hero_bank_cSharp_assignment.Controller
             {
                 accountNumber = AccountHelper.RandomAccountNumber(15);
                 var isExist = _accountModel.CheckExistAccountNumber(accountNumber);
-                if (!isExist)
+                if (isExist == null)
+                {
+                    Console.WriteLine("Hãy kiểm tra lại kết nối của bạn");
+                    return null;
+                }
+
+                if (isExist == false)
                 {
                     break;
                 }
@@ -298,12 +326,28 @@ namespace spring_hero_bank_cSharp_assignment.Controller
                 username = Console.ReadLine();
                 var isValid = ValidateHelper.IsUsernameValid(username);
                 var isExist = _accountModel.CheckExistAccountByUsername(username);
-                if (isValid && !isExist)
+                if (isExist == null)
+                {
+                    Console.WriteLine("Hãy kiểm tra lại kết nối của bạn");
+                    return null;
+                }
+
+                if (isExist == false && isValid)
                 {
                     break;
                 }
+                if (isExist == true)
+                {
+                    Console.WriteLine("Tên đăng nhập đã tồn tại");
+                    continue;
+                }
 
-                Console.WriteLine("Tên đăng nhập không hợp lệ hoặc đã tồn tại hãy nhập lại");
+                if (isValid == false)
+                {
+                    Console.WriteLine("Tên đăng nhập không hợp lệ ");
+                    continue;
+                }
+             
             }
 
             newAccount.Username = username;
