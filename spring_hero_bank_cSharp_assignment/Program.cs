@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using spring_hero_bank_cSharp_assignment.View;
 
 namespace spring_hero_bank_cSharp_assignment
 {
@@ -8,9 +9,8 @@ namespace spring_hero_bank_cSharp_assignment
         public static void Main(string[] args)
         {
             Console.OutputEncoding = Encoding.UTF8;
-            Console.InputEncoding = Encoding.UTF8;
-            // new ConsoleView().GenerateMainMenu();
-            // new AccountController().UpdatePhoneNumber("123456789");
+            new ConsoleView().GenerateMainMenu();
+ 
         }
         
     }

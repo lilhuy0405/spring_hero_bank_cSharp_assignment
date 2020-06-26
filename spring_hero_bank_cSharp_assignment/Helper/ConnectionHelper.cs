@@ -18,7 +18,7 @@ namespace spring_hero_bank_cSharp_assignment.Controller
                 Console.WriteLine("Create new connection...");
                 _connection =
                     new MySqlConnection(
-                        $"SERVER={DatabaseServer};DATABASE={DatabaseName};UID={DatabaseUid};PASSWORD={DatabasePassword}");
+                        $"SERVER={DatabaseServer};DATABASE={DatabaseName};UID={DatabaseUid};PASSWORD={DatabasePassword};CharSet=utf8;");
                 Console.WriteLine("...success!");
             }
 

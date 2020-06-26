@@ -196,7 +196,7 @@ namespace spring_hero_bank_cSharp_assignment.Model
             }
             catch (Exception e)
             {
-                Console.WriteLine("Lỗi khi truy vấn database " + e.Message);
+                Console.WriteLine("Cập nhật trạng thái tài khoản thất bại " + e.Message);
                 connection.Close();
                 return false;
             }
@@ -244,17 +244,15 @@ namespace spring_hero_bank_cSharp_assignment.Model
                 return null;
             }
         }
-
-        public bool CheckExistAccountByUsername(string username)
+        //hàm check trả về nullable của null nếu trong th kết nối db lỗi trả về null
+        public bool? CheckExistAccountByUsername(string username)
         {
             var cnn = ConnectionHelper.GetConnection();
-            bool result = false;
-
+            bool? result = false;
             try
             {
                 cnn.Open();
                 var stringCmd = $"SELECT userName FROM accounts WHERE username = '{username}'";
-                //Console.WriteLine(cmdQuery);
                 var cmd = new MySqlCommand(
                     stringCmd, cnn);
                 var reader = cmd.ExecuteReader();
@@ -263,23 +261,22 @@ namespace spring_hero_bank_cSharp_assignment.Model
                 {
                     result = true;
                 }
-
+                cnn.Close();
                 reader.Close();
             }
             catch (Exception e)
             {
                 Console.WriteLine("Kiểm tra tài khoản thất bại " + e.Message);
-            }
-            finally
-            {
+                result = null;
                 cnn.Close();
             }
 
             return result;
         }
 
-        public bool CheckExistAccountNumber(string accountNumber)
+        public bool? CheckExistAccountNumber(string accountNumber)
         {
+            bool? result = false;
             var connection = ConnectionHelper.GetConnection();
             try
             {
@@ -289,18 +286,19 @@ namespace spring_hero_bank_cSharp_assignment.Model
                 var reader = sqlCmd.ExecuteReader();
                 if (reader.Read())
                 {
-                    return true;
+                    result = true;
                 }
-
+                reader.Close();
                 connection.Close();
             }
             catch (Exception e)
             {
                 Console.WriteLine("Kiểm tra tài khoản theo số tài khoản thất bại " + e.Message);
-                return false;
+                connection.Close();
+                result = null;
             }
 
-            return false;
+            return result;
         }
 
         public bool SaveAccount(Account newAccount)
@@ -428,7 +426,7 @@ namespace spring_hero_bank_cSharp_assignment.Model
                     Status = TransactionStatus.PENDING
                 };
                 //lưu transaction pending vào database
-                //TODO: change sql command
+           
                 string insertShbTransactionStringCmd =
                     $"INSERT INTO `shb-transactions` VALUES ('{shbTransaction.Code}','{shbTransaction.SenderAccountNumber}','{shbTransaction.ReceiverAccountNumber}','{shbTransaction.Message}',{shbTransaction.Amount},{shbTransaction.Fee},'{shbTransaction.CreateAt:yyyy-MM-dd hh:mm:ss}','{shbTransaction.UpdateAt:yyyy-MM-dd hh:mm:ss}',{(int) shbTransaction.Status},{(int) shbTransaction.Type}) ";
                 var insertShbTransactionCmd = new MySqlCommand(insertShbTransactionStringCmd, cnn);
@@ -520,7 +518,6 @@ namespace spring_hero_bank_cSharp_assignment.Model
                     Status = TransactionStatus.PENDING
                 };
                 //lưu transaction pending vào database
-                //TODO: change sql command
                 string insertShbTransactionStringCmd =
                     $"INSERT INTO `shb-transactions` VAlUES ('{shbTransaction.Code}','{shbTransaction.SenderAccountNumber}','{shbTransaction.ReceiverAccountNumber}','{shbTransaction.Message}',{shbTransaction.Amount},{shbTransaction.Fee},'{shbTransaction.CreateAt:yyyy-MM-dd hh:mm:ss}','{shbTransaction.UpdateAt:yyyy-MM-dd hh:mm:ss}',{(int) shbTransaction.Status},{(int) shbTransaction.Type}) ";
                 var insertShbTransactionCmd = new MySqlCommand(insertShbTransactionStringCmd, cnn);
@@ -617,7 +614,6 @@ namespace spring_hero_bank_cSharp_assignment.Model
                     Status = TransactionStatus.PENDING
                 };
                 //lưu transaction pending vào database
-                //TODO: change sql cmd
                 string insertShbTransactionStringCmd =
                     $"INSERT INTO `shb-transactions` VAlUES ('{shbTransaction.Code}','{shbTransaction.SenderAccountNumber}','{shbTransaction.ReceiverAccountNumber}','{shbTransaction.Message}',{shbTransaction.Amount},{shbTransaction.Fee},'{shbTransaction.CreateAt:yyyy-MM-dd hh:mm:ss}','{shbTransaction.UpdateAt:yyyy-MM-dd hh:mm:ss}',{(int) shbTransaction.Status},{(int) shbTransaction.Type});";
                 var insertShbTransactionCmd = new MySqlCommand(insertShbTransactionStringCmd, connection);
