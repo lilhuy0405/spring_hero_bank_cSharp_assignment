@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using spring_hero_bank_cSharp_assignment.Entity;
 using spring_hero_bank_cSharp_assignment.Helper;
 using spring_hero_bank_cSharp_assignment.Model;
-using spring_hero_bank_cSharp_assignment.View;
 
 namespace spring_hero_bank_cSharp_assignment.Controller
 {
@@ -14,7 +13,7 @@ namespace spring_hero_bank_cSharp_assignment.Controller
         private ShbTransactionModel _transactionModel = new ShbTransactionModel();
 
 
-        public Account Login() // Đăng nhập hệ thống 
+        public Account Login() 
         {
             Console.WriteLine("Nhập tên tài khoản: ");
             var username = Console.ReadLine();
@@ -30,32 +29,33 @@ namespace spring_hero_bank_cSharp_assignment.Controller
 
             return null;
         }
-
-        // 1. Danh sách người dùng
+        
         public List<Account> ListAccount()
         {
-            var list = _accountModel.GetListAccount();
-            return list;
+            var listAccount = _accountModel.GetListAccount();
+            return listAccount;
         }
-
-
-        // 3. Tìm kiếm người dùng theo tên.
+        
+        public List<SHBTransaction> GetListTransactions()
+        {
+            var listTransactions = _transactionModel.GetListTransactions();
+            return listTransactions;
+        }
+        
         public List<Account> SearchAccountByName()
         {
             Console.WriteLine("Nhập tên tài khoản muốn tìm: ");
             var fullName = Console.ReadLine();
             return _accountModel.GetAccountsByName(fullName);
         }
-
-        // 4. Tìm kiếm người dùng theo số tài khoản.
+        
         public Account SearchAccountByAccountNumber()
         {
             Console.WriteLine("Nhập số tài khoản muốn tìm kiếm: ");
             var accountNumber = Console.ReadLine();
             return _accountModel.GetAccountByAccountNumber(accountNumber);
         }
-
-        // 5. Tìm kiếm người dùng theo số điện thoại
+        
         public Account SearchAccountByPhoneNumber()
         {
             Console.WriteLine("Nhập số điện thoại muốn tìm: ");
@@ -63,8 +63,7 @@ namespace spring_hero_bank_cSharp_assignment.Controller
             var account = _accountModel.GetAccountByPhoneNumber(phoneNumber);
             return account;
         }
-
-        // 6. Thêm người dùng mới
+        
         public Account AddUser() // cho phép thêm tài khoản khách hoặc admin
         {
             var accountNumber = "";
@@ -117,7 +116,7 @@ namespace spring_hero_bank_cSharp_assignment.Controller
                     break;
                 }
 
-                Console.WriteLine("email không hợp lệ mời nhập lại");
+                Console.WriteLine("Email không hợp lệ mời nhập lại");
             }
 
             newAccount.Email = email;
@@ -197,8 +196,6 @@ namespace spring_hero_bank_cSharp_assignment.Controller
 
         // 7. Khoá và mở tài khoản người dùng
         // 7.1. Khóa tài khoản người dùng
-
-
         public bool LockAccount()
         {
             Console.WriteLine("Nhập vào số tài khoản bạn muốn khóa");
@@ -226,7 +223,7 @@ namespace spring_hero_bank_cSharp_assignment.Controller
                 return true;
             }
 
-            Console.WriteLine($"mở khóa tài khoản {accountNumber} thất bại !");
+            Console.WriteLine($"Mở khóa tài khoản {accountNumber} không thành công!");
             return false;
         }
 
@@ -273,7 +270,7 @@ namespace spring_hero_bank_cSharp_assignment.Controller
                     break;
                 }
 
-                Console.WriteLine("email không hợp lệ mời nhập lại");
+                Console.WriteLine("Email không hợp lệ mời nhập lại");
             }
 
             newAccount.Email = email;
@@ -379,7 +376,12 @@ namespace spring_hero_bank_cSharp_assignment.Controller
             }
 
             //confirm update
-            
+            string confirmMessage = $"Bạn có muốn lưu số điện thoại {newPhoneNumber} không ? ";
+            var isConfirm = PromptHelper.ConfirmUser(confirmMessage);
+            if (isConfirm == false)
+            {
+                return false;
+            }
             var res = _accountModel.UpdateAccountByAccountNumber(accountNumber, "phoneNumber", newPhoneNumber);
             if (res == true)
             {
@@ -387,7 +389,7 @@ namespace spring_hero_bank_cSharp_assignment.Controller
             }
             else
             {
-                Console.WriteLine("Update thông tin thất bại");
+                Console.WriteLine("Update thông tin không thành công");
                 return false;
             }
 
@@ -413,6 +415,12 @@ namespace spring_hero_bank_cSharp_assignment.Controller
             }
 
             //confirm update
+            string confirmMessage = $"Bạn có muốn lưu tên {newFullName} không ? ";
+            var isConfirm = PromptHelper.ConfirmUser(confirmMessage);
+            if (isConfirm == false)
+            {
+                return false;
+            }
             var res = _accountModel.UpdateAccountByAccountNumber(accountNumber, "fullName", newFullName);
             if (res == true)
             {
@@ -420,7 +428,7 @@ namespace spring_hero_bank_cSharp_assignment.Controller
             }
             else
             {
-                Console.WriteLine("Update thông tin thất bại");
+                Console.WriteLine("Update thông tin không thành công");
                 return false;
             }
 
@@ -454,7 +462,6 @@ namespace spring_hero_bank_cSharp_assignment.Controller
                 }
             }
             //confirm update
-
             var isConfirm = PromptHelper.ConfirmUser($"Bạn có muốn thay đổi email thành {newEmail} hay không ?");
             if (isConfirm == false)
             {
@@ -468,7 +475,7 @@ namespace spring_hero_bank_cSharp_assignment.Controller
             }
             else
             {
-                Console.WriteLine("Update thông tin thất bại");
+                Console.WriteLine("Update thông tin không thành công");
                 return false;
             }
 
@@ -626,7 +633,7 @@ namespace spring_hero_bank_cSharp_assignment.Controller
                     result = true;
                     break;
                 default:
-                    Console.WriteLine("lựa chọn k hợp lệ");
+                    Console.WriteLine("Lựa chọn không hợp lệ");
                     result = false;
                     break;
             }
@@ -643,14 +650,6 @@ namespace spring_hero_bank_cSharp_assignment.Controller
         public double GetBalance(string accountNumber)
         {
             return _accountModel.GetCurrentBalanceByAccountNumber(accountNumber);
-        }
-
-        public List<SHBTransaction> GetListTransactions()
-        {
-            var listTransactions = _transactionModel.GetListTransactions();
-            var size = listTransactions.Count;
-
-            return listTransactions;
         }
     }
 }

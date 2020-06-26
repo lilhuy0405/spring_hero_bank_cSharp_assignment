@@ -1,9 +1,6 @@
 using System;
 using System.Security.Cryptography;
 using System.Text;
-using System;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace spring_hero_bank_cSharp_assignment.Helper
 {
@@ -14,8 +11,8 @@ namespace spring_hero_bank_cSharp_assignment.Helper
         public string MD5Hash(string input)
         {
             var hash = new StringBuilder();
-            var md5provider = new MD5CryptoServiceProvider();
-            byte[] bytes = md5provider.ComputeHash(new UTF8Encoding().GetBytes(input));
+            var md5Provider = new MD5CryptoServiceProvider();
+            byte[] bytes = md5Provider.ComputeHash(new UTF8Encoding().GetBytes(input));
             foreach (var t in bytes)
             {
                 hash.Append(t.ToString("x2"));
