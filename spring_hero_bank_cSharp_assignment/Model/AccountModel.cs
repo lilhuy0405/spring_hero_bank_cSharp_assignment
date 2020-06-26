@@ -393,8 +393,11 @@ namespace spring_hero_bank_cSharp_assignment.Model
         {
             var minBalance = 50000;
             var cnn = ConnectionHelper.GetConnection();
-
-            cnn.Open();
+            //check connection (hot fix)
+            if (ConnectionHelper.IsConnectionSuccess() == false)
+            {
+                return false;
+            }
             var transaction = cnn.BeginTransaction();
             try
             {
@@ -486,7 +489,11 @@ namespace spring_hero_bank_cSharp_assignment.Model
         {
             //amount da dc validate > 0 o controller
             var cnn = ConnectionHelper.GetConnection();
-            cnn.Open();
+            //check connection (hot fix)
+            if (ConnectionHelper.IsConnectionSuccess() == false)
+            {
+                return false;
+            }
             var transaction = cnn.BeginTransaction();
             try
             {
@@ -566,7 +573,11 @@ namespace spring_hero_bank_cSharp_assignment.Model
             double minBalance = 50000.0;
             //1. Open connection
             var connection = ConnectionHelper.GetConnection();
-            connection.Open();
+            //check connection (hot fix)
+            if (ConnectionHelper.IsConnectionSuccess() == false)
+            {
+                return false;
+            }
             var transaction = connection.BeginTransaction();
             try
             {

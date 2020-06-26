@@ -101,7 +101,7 @@ namespace spring_hero_bank_cSharp_assignment.Helper
 
                 if (amount % 10000 != 0)
                 {
-                    Console.WriteLine("Số tiền phải là bội số của 10000!");
+                    Console.WriteLine("Số tiền phải là bội số của 10000 mời nhập lại !");
                     continue;
                 }
 

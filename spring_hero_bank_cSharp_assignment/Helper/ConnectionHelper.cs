@@ -24,5 +24,20 @@ namespace spring_hero_bank_cSharp_assignment.Controller
 
             return _connection;
         }
+
+        public static bool IsConnectionSuccess()
+        {
+            var connection = GetConnection();
+            try
+            {
+                connection.Open();
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Kết nối database thất bại, hãy kiểm tra lại kết nối của bạn " + e.Message);
+                return false;
+            }
+        }
     }
 }

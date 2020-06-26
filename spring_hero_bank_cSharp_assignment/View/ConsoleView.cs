@@ -328,6 +328,7 @@ namespace spring_hero_bank_cSharp_assignment.View
                             Console.WriteLine("2. Thay đổi email");
                             Console.WriteLine("3. Thay đổi số điện thoại");
                             Console.WriteLine("4. Quay lại menu");
+                            Console.WriteLine("Nhập lựa chọn của bạn từ 1 đến 4");
                             var updateChoice = PromptHelper.GetUserChoice(1, 4);
                             switch (updateChoice)
                             {
