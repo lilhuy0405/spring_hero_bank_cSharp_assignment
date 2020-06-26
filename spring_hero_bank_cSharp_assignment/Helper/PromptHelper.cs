@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace spring_hero_bank_cSharp_assignment.Helper
@@ -46,7 +47,7 @@ namespace spring_hero_bank_cSharp_assignment.Helper
             //cộng chuỗi nó vào pass và hiển thì 1 dấu sao trên console
             //nếu phim backspace dc ấn kiểm tra xem > 0 hay không nếu có write("/b /b") để di chuyển con trỏ về trước và xóa ký tự cuối của chuỗi
             //nếu enter được ấn break loop
-          
+
             var pass = new StringBuilder();
             while (true)
             {
@@ -85,7 +86,6 @@ namespace spring_hero_bank_cSharp_assignment.Helper
                 try
                 {
                     amount = double.Parse(Console.ReadLine());
-                
                 }
                 catch (Exception e)
                 {
@@ -94,15 +94,40 @@ namespace spring_hero_bank_cSharp_assignment.Helper
                     continue;
                 }
 
-                if (amount > 0)
+                if (amount < 0)
+                {
+                    Console.WriteLine("Số tiền phải lớn hơn 0 mời nhập lại...");
+                    continue;
+                }
+
+                if (amount % 10000 != 0)
+                {
+                    Console.WriteLine("Số tiền phải là bội số của 10000!");
+                    continue;
+                }
+
+                if (amount > 0 && (amount % 10000 == 0))
                 {
                     break;
                 }
-
-                Console.WriteLine("Số tiền phải lớn hơn 0 mời nhập lại...");
             }
 
             return amount;
+        }
+
+        public static bool ConfirmUser(string message) 
+        {
+            Console.WriteLine(message);
+            Console.WriteLine("1. Có");
+            Console.WriteLine("2. Không");
+            Console.WriteLine("Nhập lựa chọn của bạn (1, 2)");
+            int choice = GetUserChoice(1, 2);
+            if (choice == 1)
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

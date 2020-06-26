@@ -27,7 +27,7 @@ namespace spring_hero_bank_cSharp_assignment.Controller
                 Console.WriteLine("Đăng nhập thành công");
                 return account;
             }
-            
+
             return null;
         }
 
@@ -101,6 +101,7 @@ namespace spring_hero_bank_cSharp_assignment.Controller
                     newAccount.Role = AccountRole.ADMIN;
                     break;
             }
+
             //get full Name
             Console.WriteLine("Nhập tên đầy đủ: ");
             string fullName = Console.ReadLine();
@@ -352,20 +353,33 @@ namespace spring_hero_bank_cSharp_assignment.Controller
 
         public bool UpdatePhoneNumber(string accountNumber)
         {
-            Console.WriteLine("Số điện thoại hiện tại: " + ConsoleView.CurrentLogin.PhoneNumber);
+            var currentAccount = _accountModel.GetAccountByAccountNumber(accountNumber);
+            var oldPhone = currentAccount.PhoneNumber;
+            Console.WriteLine("Số điện thoại hiện tại là: " + oldPhone);
             Console.WriteLine("Nhập số điện thoại mới của bạn: ");
             string newPhoneNumber;
             while (true)
             {
                 newPhoneNumber = Console.ReadLine();
-                if (ValidateHelper.IsPhoneNumberValid(newPhoneNumber))
+                if (ValidateHelper.IsPhoneNumberValid(newPhoneNumber) && !newPhoneNumber.Equals(oldPhone))
                 {
                     break;
                 }
 
-                Console.WriteLine("Số điện thoại không hợp lệ hãy nhập lại");
+                if (!ValidateHelper.IsEmailValid(newPhoneNumber))
+                {
+                    Console.WriteLine("Số điện thoại không hợp lệ hãy nhập lại");
+                    continue;
+                }
+
+                if (newPhoneNumber.Equals(oldPhone))
+                {
+                    Console.WriteLine("Bạn đã nhập vào số điện thoại cũ mời nhập lại");
+                }
             }
 
+            //confirm update
+            
             var res = _accountModel.UpdateAccountByAccountNumber(accountNumber, "phoneNumber", newPhoneNumber);
             if (res == true)
             {
@@ -382,10 +396,23 @@ namespace spring_hero_bank_cSharp_assignment.Controller
 
         public bool UpdateFullName(string accountNumber)
         {
-            Console.WriteLine("Tên hiện tại: " + ConsoleView.CurrentLogin.FullName);
+            var currentAccount = _accountModel.GetAccountByAccountNumber(accountNumber);
+            var oldName = currentAccount.FullName;
+            Console.WriteLine("Tên hiện tại: " + oldName);
             Console.WriteLine("Nhập tên đầy đủ mới của bạn");
-            string newFullName = Console.ReadLine();
+            string newFullName;
+            while (true)
+            {
+                newFullName = Console.ReadLine();
+                if (!newFullName.Equals(oldName))
+                {
+                    break;
+                }
 
+                Console.WriteLine("Bạn đã nhập tên cũ mời bạn nhập lại");
+            }
+
+            //confirm update
             var res = _accountModel.UpdateAccountByAccountNumber(accountNumber, "fullName", newFullName);
             if (res == true)
             {
@@ -402,18 +429,36 @@ namespace spring_hero_bank_cSharp_assignment.Controller
 
         public bool UpdateEmail(string accountNumber)
         {
-            Console.WriteLine("Email hiện tại " + ConsoleView.CurrentLogin.Email);
+            var currentAccount = _accountModel.GetAccountByAccountNumber(accountNumber);
+            var oldEmail = currentAccount.Email;
+            Console.WriteLine("Email hiện tại " + oldEmail);
             Console.WriteLine("Nhập email mới của bạn");
             string newEmail = "";
             while (true)
             {
                 newEmail = Console.ReadLine();
-                if (ValidateHelper.IsEmailValid(newEmail))
+                if (ValidateHelper.IsEmailValid(newEmail) && !newEmail.Equals(oldEmail))
                 {
                     break;
                 }
 
-                Console.WriteLine("Email không hợp lệ mời nhập lại");
+                if (!ValidateHelper.IsEmailValid(newEmail))
+                {
+                    Console.WriteLine("Email không hợp lệ mời nhập lại");
+                    continue;
+                }
+
+                if (newEmail.Equals(oldEmail))
+                {
+                    Console.WriteLine("Bạn đã nhập email cũ, mời nhập lại");
+                }
+            }
+            //confirm update
+
+            var isConfirm = PromptHelper.ConfirmUser($"Bạn có muốn thay đổi email thành {newEmail} hay không ?");
+            if (isConfirm == false)
+            {
+                return false;
             }
 
             var res = _accountModel.UpdateAccountByAccountNumber(accountNumber, "email", newEmail);
@@ -488,6 +533,13 @@ namespace spring_hero_bank_cSharp_assignment.Controller
         {
             Console.WriteLine("Nhập số tiền muốn gửi: ");
             var amount = PromptHelper.GetAmount();
+            //confirm
+            string confirmMessage = $"Bạn có muốn gửi {amount} không ? ";
+            var isConfirm = PromptHelper.ConfirmUser(confirmMessage);
+            if (isConfirm == false)
+            {
+                return false;
+            }
 
             if (_accountModel.Deposit(accountNumber, amount))
             {
@@ -503,8 +555,17 @@ namespace spring_hero_bank_cSharp_assignment.Controller
         public bool WithDraw(string accountNumber)
         {
             Console.WriteLine("Nhập số tiền bạn muốn rút: ");
-            var amount = PromptHelper.GetAmount();
 
+            var amount = PromptHelper.GetAmount();
+            //confirm 
+            string confirmMessage = $"Bạn có muốn rút {amount} không ? ";
+            var isConfirm = PromptHelper.ConfirmUser(confirmMessage);
+            if (isConfirm == false)
+            {
+                return false;
+            }
+
+            Console.WriteLine();
             if (_accountModel.Withdraw(accountNumber, amount))
             {
                 Console.WriteLine($"Đã rút {amount} thành công từ tài khoản {accountNumber} phí giao dịch 1100đ");
@@ -556,7 +617,8 @@ namespace spring_hero_bank_cSharp_assignment.Controller
                 case 1:
                     Console.WriteLine("Nhập số tiền bạn muốn chuyển khoản: ");
                     var amount = PromptHelper.GetAmount();
-
+                    //confirm transfer
+                    
                     result = _accountModel.Transfer(senderAccountNumber, receiverAccountNumber, amount);
                     break;
                 case 2:

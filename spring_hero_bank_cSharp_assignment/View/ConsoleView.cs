@@ -68,11 +68,7 @@ namespace spring_hero_bank_cSharp_assignment.View
                         {
                             GenerateAdminMenu();
                         }
-                        else
-                        {
-                            GenerateCustomMenu();
-                        }
-
+                        GenerateCustomMenu();
                         break;
                     case 3:
                         Console.WriteLine("Thoát");
@@ -120,7 +116,7 @@ namespace spring_hero_bank_cSharp_assignment.View
                         Console.WriteLine("danh sách người dùng");
                         Console.WriteLine(
                             "---------------------------------------------------------------------------------");
-                        List<Account> listAccounts =  _accountController.ListAccount();
+                        List<Account> listAccounts = _accountController.ListAccount();
                         if (listAccounts == null)
                         {
                             PromptHelper.StopConsole("Nhấn phím bất kỳ để tiếp tục...");
@@ -141,6 +137,7 @@ namespace spring_hero_bank_cSharp_assignment.View
                         {
                             listPages.Add(account.ToString());
                         }
+
                         //generate page view
                         GeneratePageView(listPages);
                         break;
@@ -155,6 +152,7 @@ namespace spring_hero_bank_cSharp_assignment.View
                             PromptHelper.StopConsole("Nhấn phím bất kỳ để quay lại menu...");
                             break;
                         }
+
                         if (listAllTransactions.Count == 0)
                         {
                             Console.WriteLine("Chưa có giao dịch nào");
@@ -170,6 +168,7 @@ namespace spring_hero_bank_cSharp_assignment.View
                         {
                             listTransactionString.Add(transaction.ToString());
                         }
+
                         //generate page view
                         GeneratePageView(listTransactionString);
                         break;
@@ -184,12 +183,14 @@ namespace spring_hero_bank_cSharp_assignment.View
                             PromptHelper.StopConsole("Nhấn phím bất kỳ để quay lại menu...");
                             break;
                         }
+
                         if (searchResult.Count == 0)
                         {
                             Console.WriteLine("Không có tài khoản nào khớp");
                             PromptHelper.StopConsole("Nhấn phím bất kỳ để quay lại menu...");
                             break;
                         }
+
                         Console.WriteLine($"Đã tìm thấy {searchResult.Count} tài khoản");
                         PromptHelper.StopConsole("Bấm phím bất kỳ để hiển thị danh sách tài khoản...");
                         //chuển sang list string
@@ -198,6 +199,7 @@ namespace spring_hero_bank_cSharp_assignment.View
                         {
                             listResultString.Add(account.ToString());
                         }
+
                         //generate page view
                         GeneratePageView(listResultString);
                         break;
@@ -224,12 +226,13 @@ namespace spring_hero_bank_cSharp_assignment.View
                         Console.WriteLine("Tìm kiếm người dùng theo số điện thoại");
                         Console.WriteLine(
                             "---------------------------------------------------------------------------------");
-                        var resultAccountByPhoneNumber =  _accountController.SearchAccountByPhoneNumber();
+                        var resultAccountByPhoneNumber = _accountController.SearchAccountByPhoneNumber();
                         if (resultAccountByPhoneNumber == null)
                         {
                             PromptHelper.StopConsole("Ấn phím bất kỳ để quay lại menu...");
                             break;
                         }
+
                         var listSearchAccountByPhoneNumber = new List<string>()
                         {
                             resultAccountByPhoneNumber.ToString()
@@ -238,7 +241,7 @@ namespace spring_hero_bank_cSharp_assignment.View
                         break;
                     case 6:
                         Console.Clear();
-                        Console.WriteLine(" Thêm người dùng mới");
+                        Console.WriteLine("Thêm người dùng mới");
                         Console.WriteLine(
                             "---------------------------------------------------------------------------------");
                         var newUser = _accountController.AddUser();
@@ -294,6 +297,7 @@ namespace spring_hero_bank_cSharp_assignment.View
                             PromptHelper.StopConsole("Ấn phím bất kỳ để tiếp tục....");
                             break;
                         }
+
                         List<string> listPage = new List<string>();
                         if (listTransactions.Count == 0)
                         {
@@ -307,6 +311,7 @@ namespace spring_hero_bank_cSharp_assignment.View
                         {
                             listPage.Add(transaction.ToString());
                         }
+
                         PromptHelper.StopConsole("Ấn phím bất kỳ để hiển thị danh sách giao dịch...");
                         GeneratePageView(listPage);
                         break;
@@ -317,6 +322,7 @@ namespace spring_hero_bank_cSharp_assignment.View
                             "---------------------------------------------------------------------------------");
                         while (true)
                         {
+                            Console.Clear();
                             Console.WriteLine("Lựa chọn thông tin muốn thay đổi: ");
                             Console.WriteLine("1. Thay đổi tên đầy đủ");
                             Console.WriteLine("2. Thay đổi email");
@@ -326,14 +332,17 @@ namespace spring_hero_bank_cSharp_assignment.View
                             switch (updateChoice)
                             {
                                 case 1:
+                                    Console.Clear();
                                     _accountController.UpdateFullName(CurrentLogin.AccountNumber);
                                     PromptHelper.StopConsole("Ấn phím bất kỳ để tiếp tục...");
                                     break;
                                 case 2:
+                                    Console.Clear();
                                     _accountController.UpdateEmail(CurrentLogin.AccountNumber);
                                     PromptHelper.StopConsole("Ấn phím bất kỳ để tiếp tục...");
                                     break;
                                 case 3:
+                                    Console.Clear();
                                     _accountController
                                         .UpdatePhoneNumber(CurrentLogin.AccountNumber);
                                     PromptHelper.StopConsole("Ấn phím bất kỳ để tiếp tục...");
@@ -406,7 +415,7 @@ namespace spring_hero_bank_cSharp_assignment.View
                             "---------------------------------------------------------------------------------");
                         if (_accountController.Deposit(CurrentLogin.AccountNumber) == false)
                         {
-                            Console.WriteLine("Có lỗi xảy ra trong quá trình gửi tiền xin hãy thử lại");
+                            Console.WriteLine("Gửi tiền thất bại, hãy thử lại sau !!!");
                             PromptHelper.StopConsole("Nhấn phím bất kỳ để quay lại menu....");
                             break;
                         }
@@ -421,7 +430,7 @@ namespace spring_hero_bank_cSharp_assignment.View
                             "---------------------------------------------------------------------------------");
                         if (_accountController.WithDraw(CurrentLogin.AccountNumber) == false)
                         {
-                            Console.WriteLine("Có lỗi xảy ra trong quá trình rút tiền xin hãy thử lại");
+                            Console.WriteLine("Rút tiền thất bại....");
                             PromptHelper.StopConsole("Nhấn phím bất kỳ để quay lại menu....");
                             break;
                         }
@@ -436,7 +445,7 @@ namespace spring_hero_bank_cSharp_assignment.View
                             "---------------------------------------------------------------------------------");
                         if (_accountController.Transfer(CurrentLogin.AccountNumber) == false)
                         {
-                            Console.WriteLine("đã xảy ra lỗi xin hãy thử lại");
+                            Console.WriteLine("Chuyển khoản thất bại");
                             PromptHelper.StopConsole("Nhấn phím bất kỳ để quay lại menu....");
                             break;
                         }
@@ -522,11 +531,13 @@ namespace spring_hero_bank_cSharp_assignment.View
                             PromptHelper.StopConsole("Nhấn phím bất kỳ để quay lại menu....");
                             break;
                         }
+
                         List<string> listPage = new List<string>();
                         foreach (var shbTransaction in listTransactions)
                         {
                             listPage.Add(shbTransaction.ToString());
                         }
+
                         GeneratePageView(listPage);
                         PromptHelper.StopConsole("Nhấn phím bất kỳ để tiếp tục...");
                         Console.WriteLine(
@@ -535,7 +546,6 @@ namespace spring_hero_bank_cSharp_assignment.View
                     case 8:
                         Console.WriteLine("Thoát");
                         break;
-          
                 } //end swtich case
 
                 if (choice == 8 || choice == 6) // sau khi update mat khau -> break về main menu luôn
