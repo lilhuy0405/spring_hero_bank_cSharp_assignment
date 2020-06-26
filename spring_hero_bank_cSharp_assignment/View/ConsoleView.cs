@@ -68,7 +68,12 @@ namespace spring_hero_bank_cSharp_assignment.View
                         {
                             GenerateAdminMenu();
                         }
-                        GenerateCustomMenu();
+
+                        if (CurrentLogin.Role == AccountRole.GUEST)
+                        {
+                            GenerateCustomMenu();    
+                        }
+                        
                         break;
                     case 3:
                         Console.WriteLine("Thoát");
@@ -369,19 +374,19 @@ namespace spring_hero_bank_cSharp_assignment.View
                             Console.WriteLine("Câp nhật mật khẩu thất bại...");
                             Console.WriteLine("Phiên đăng nhập đã hết hạn...");
                             PromptHelper.StopConsole("Bấm phím bất kỳ để quay lại menu chính...");
-                            break;
+                            return;
                         }
 
                         Console.WriteLine("Mời bạn đăng nhập lại...");
                         PromptHelper.StopConsole("Bấm phím bất kỳ để tiếp tục....");
-                        break;
+                        return;
                     case 11:
                         Console.Clear();
                         Console.WriteLine("Thoát");
                         break;
                 }
 
-                if (choice == 11 || choice == 10) // break ve main menu ngay sau khi update password hoac chon thoát
+                if (choice == 11) // break ve main menu ngay sau khi update password hoac chon thoát
                 {
                     break;
                 }
@@ -515,12 +520,12 @@ namespace spring_hero_bank_cSharp_assignment.View
                             Console.WriteLine("Câp nhật mật khẩu thất bại...");
                             Console.WriteLine("Phiên đăng nhập đã hết hạn...");
                             PromptHelper.StopConsole("Bấm phím bất kỳ để quay lại menu chính...");
-                            break;
+                            return;
                         }
 
                         Console.WriteLine("Cập nhật mật khẩu thành công mời bạn đăng nhập lại...");
                         PromptHelper.StopConsole("Bấm phím bất kỳ để tiếp tục....");
-                        break;
+                        return;
                     case 7:
                         Console.Clear();
                         Console.WriteLine("Truy vấn lịch sử giao dịch");
@@ -549,7 +554,7 @@ namespace spring_hero_bank_cSharp_assignment.View
                         break;
                 } //end swtich case
 
-                if (choice == 8 || choice == 6) // sau khi update mat khau -> break về main menu luôn
+                if (choice == 8) // sau khi update mat khau -> break về main menu luôn
                 {
                     break;
                 }
