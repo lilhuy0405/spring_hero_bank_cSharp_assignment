@@ -571,9 +571,13 @@ namespace spring_hero_bank_cSharp_assignment.Controller
 
                 //update md5hash
                 string newHashPassWord = _passwordHelper.MD5Hash(newPassword + account.Salt);
-                _accountModel.UpdateAccountByAccountNumber(accountNumber, "hashPassword", newHashPassWord);
-                Console.WriteLine("Đã cập nhật mật khẩu thành công");
-                return true;
+                var updateSuccess = _accountModel.UpdateAccountByAccountNumber(accountNumber, "hashPassword", newHashPassWord);
+                if (updateSuccess)
+                {
+                    Console.WriteLine("Đã cập nhật mật khẩu thành công");
+                    return true;
+                }
+                return false;
             }
 
             Console.WriteLine("Bạn đã nhập sai mật khẩu");
